@@ -1,0 +1,107 @@
+<!-- ========== blogs.html ========== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Name — Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>Zengjie Zhang</div>
+      <nav>
+        <a href="home.html">Home</a>
+        <a href="blogs.html" class="active">Blogs</a>
+      </nav>
+    </header>
+
+    <!-- Blog list -->
+    <ul id="blog-list"></ul>
+
+    <!-- Blog content -->
+    <article id="blog-content"></article>
+
+    <footer>
+      Markdown blogs · rendered on demand
+    </footer>
+  </div>
+
+  <!-- Minimal markdown renderer -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    /*
+      blogs/index.json example:
+      [
+        {
+          "id": "temporality",
+          "title": "Temporality: Transient and Steady-State Life",
+          "date": "2026",
+          "file": "blogs/temporality.md"
+        }
+      ]
+    */
+
+    const listEl = document.getElementById('blog-list');
+    const contentEl = document.getElementById('blog-content');
+
+    function getQueryParam(name) {
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    async function loadIndex() {
+      const res = await fetch('blogs/index.json');
+      return await res.json();
+    }
+
+    async function loadBlog(file, meta) {
+      const res = await fetch(file);
+      const md = await res.text();
+
+      listEl.style.display = 'none';
+      contentEl.innerHTML = `
+        <h1>${meta.title}</h1>
+        <div class="meta">${meta.date}</div>
+        <div class="article-content">
+        ${marked.parse(md)}
+      `;
+    }
+
+    async function init() {
+      const index = await loadIndex();
+      const blogId = getQueryParam('id');
+
+      if (!blogId) {
+        index.forEach(entry => {
+          const li = document.createElement('li');
+          li.onclick = () => {
+            window.location.search = `?id=${entry.id}`;
+          };
+
+          // title 行
+          const titleDiv = document.createElement('div');
+          titleDiv.className = 'blog-title';
+          titleDiv.textContent = entry.title;
+
+          // date 行
+          const dateDiv = document.createElement('div');
+          dateDiv.className = 'blog-date';
+          dateDiv.textContent = entry.date;
+
+          li.appendChild(titleDiv);
+          li.appendChild(dateDiv);
+          listEl.appendChild(li);
+        });
+      } else {
+        const entry = index.find(e => e.id === blogId);
+        if (entry) {
+          await loadBlog(entry.file, entry);
+        }
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

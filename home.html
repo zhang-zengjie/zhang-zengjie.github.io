@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+Minimalist Portfolio
+Pages: home.html, blogs.html
+Style: restrained, elegant, low-saturation brown & khaki
+Font stack avoids dependency; can be replaced later with serif display fonts
+Markdown blogs can be pre-rendered or injected later
+-->
+
+<!-- ========== home.html ========== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Name — Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="name">Your Name</div>
+      <nav>
+        <a href="home.html" class="active">Home</a>
+        <a href="blogs.html">Blogs</a>
+      </nav>
+    </header>
+
+    <section>
+      <h2>About</h2>
+      <p>
+        I work on formal verification, simulation, and safety testing of
+        autonomous systems. My focus is on building interpretable, mathematically
+        grounded tools for evaluating AI-driven decision making.
+      </p>
+      <p>
+        This site is a deliberately small surface: selected work, ongoing
+        directions, and written thoughts.
+      </p>
+    </section>
+
+    <section>
+      <h2>Selected Projects</h2>
+      <div class="project">
+        <div class="project-title">Formal Scenario Verification for Autonomous Driving</div>
+        <div class="project-meta">STL / LTL · Simulation · Safety Metrics</div>
+      </div>
+      <div class="project">
+        <div class="project-title">Policy-driven Scenario Sampling</div>
+        <div class="project-meta">Coverage-guided exploration · Edge cases</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Ongoing</h2>
+      <div class="project">
+        <div class="project-title">Web-based Scenario Testing Platform</div>
+        <div class="project-meta">CARLA · Leaderboard · Interactive GUI</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Recent Writing</h2>
+      <ul class="blog-list">
+        <li><a href="blogs.html">Temporality: Transient and Steady-State Life</a></li>
+        <li><a href="blogs.html">Why Interpretability Is a Form of Power</a></li>
+        <li><a href="blogs.html">On Coverage Metrics Beyond Accuracy</a></li>
+      </ul>
+    </section>
+
+    <footer>
+      © Zengjie · Personal Portfolio · <a href="mailto:zengjie@azonai.co">Contact</a>
+    </footer>
+  </div>
+</body>
+</html>
