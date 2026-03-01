@@ -1,200 +1,139 @@
-.spectral-extralight {
-  font-family: "Spectral", serif;
-  font-weight: 200;
-  font-style: normal;
-}
-
-.spectral-light {
-  font-family: "Spectral", serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.spectral-regular {
-  font-family: "Spectral", serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.spectral-medium {
-  font-family: "Spectral", serif;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.spectral-semibold {
-  font-family: "Spectral", serif;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.spectral-bold {
-  font-family: "Spectral", serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.spectral-extrabold {
-  font-family: "Spectral", serif;
-  font-weight: 800;
-  font-style: normal;
-}
-
-.spectral-extralight-italic {
-  font-family: "Spectral", serif;
-  font-weight: 200;
-  font-style: italic;
-}
-
-.spectral-light-italic {
-  font-family: "Spectral", serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.spectral-regular-italic {
-  font-family: "Spectral", serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.spectral-medium-italic {
-  font-family: "Spectral", serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.spectral-semibold-italic {
-  font-family: "Spectral", serif;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.spectral-bold-italic {
-  font-family: "Spectral", serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.spectral-extrabold-italic {
-  font-family: "Spectral", serif;
-  font-weight: 800;
-  font-style: italic;
-}
+/* =========================
+   Design Tokens
+========================= */
 
 :root {
-    --bg: #ffffff;
-    --text: #2b2b2b;
-    --muted: #6f6a63;
-    --accent: #8b6b3e;   /* restrained brown */
-    --accent-soft: #d6cbb8; /* khaki */
-    --border: #ece7df;
+  --bg: #ffffff;
+  --text: #2b2b2b;
+  --muted: #6f6a63;
+  --accent: #8b6b3e;
+  --subaccent: #a1762b;
+  --border: #ece7df;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
+/* =========================
+   Base Typography
+========================= */
 
 body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-weight: 400;
-    font-style: normal;
-    font-family: "Georgia", "Times New Roman", serif;
-    line-height: 1.7;
+  margin: 0;
+  font-size: 1.1rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Spectral", "Georgia", "Times New Roman", serif;
+  line-height: 1.6;
 }
 
-a {
-    color: var(--accent);
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.container {
-    max-width: 820px;
-    padding: 64px 24px 96px;
-    margin: 0 auto;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 72px;
-}
-
-.name {
-    font-size: 1.6rem;
-    font-weight: normal;
-    letter-spacing: 0.02em;
-}
-
-nav a {
-    margin-left: 24px;
-    font-size: 0.95rem;
-    color: var(--muted);
-}
-
-nav a.active {
-    color: var(--accent);
-}
-
-section {
-    margin-bottom: 72px;
-}
-
-h2 {
-    font-size: 1.1rem;
-    font-weight: normal;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 24px;
+h1, h2, h3, h4, h5, h6 {
+  color: var(--accent);  /* 例如：#8b6b3e (使用你的accent颜色) */
 }
 
 p {
-    margin: 0 0 16px 0;
+  margin: 0 0 1em 0;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
-.project {
-    padding: 16px 0;
-    border-top: 1px solid var(--border);
+a {
+  color: var(--accent);
+  text-decoration: none;
 }
 
-.project:last-child {
-    border-bottom: 1px solid var(--border);
+a:hover {
+  text-decoration: underline;
 }
 
-.project-title {
-    font-size: 1rem;
-    margin-bottom: 4px;
+/* =========================
+   Layout
+========================= */
+
+.container {
+  max-width: 720px;
+  padding: 64px 24px 96px;
+  margin: 0 auto;
 }
 
-.project-meta {
-    font-size: 0.9rem;
-    color: var(--muted);
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 64px;
 }
 
-.blog-list li {
-    list-style: none;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
+nav a {
+  margin-left: 24px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+nav a.active {
+  color: var(--accent);
 }
 
 footer {
-    margin-top: 96px;
-    font-size: 0.85rem;
-    color: var(--muted);
+  margin-top: 96px;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
-article h1, article h2, article h3 {
+/* =========================
+   Blog List (Only Blog List)
+========================= */
+
+#blog-list {
+  padding: 0;
+  margin: 0;
+}
+
+#blog-list li {
+  list-style: none;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+#blog-list li:hover {
+  color: var(--accent);
+}
+
+.blog-title {
+  font-size: 1rem;
   font-weight: normal;
+  line-height: 1.4;
+}
+
+.blog-date {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* =========================
+   Article Styling
+========================= */
+
+article {
+  margin-top: 48px;
+}
+
+article h1 {
+  font-size: 1.6rem;
+  font-weight: normal;
+  margin-bottom: 4px;
+}
+
+article .meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 32px;
 }
 
 article blockquote {
-  margin: 8px 0;
+  margin: 16px 0;
   padding-left: 16px;
   border-left: 3px solid var(--border);
   color: var(--muted);
@@ -207,114 +146,40 @@ article code {
   font-size: 0.9em;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 48px;
-}
+/* Markdown content wrapper */
 
-nav a {
-  margin-left: 24px;
-  font-size: 0.95rem;
-  color: #6f6a63;
-  text-decoration: none;
-}
-
-nav a.active {
-  color: #8b6b3e;
-}
-
-ul {
-  padding: 0;
-}
-
-li {
-  list-style: none;
-  padding: 12px 0;
-  border-bottom: 1px solid #ece7df;
-  cursor: pointer;
-}
-
-li:hover {
-  color: #8b6b3e;
-}
-
-article {
-  margin-top: 48px;
-}
-
-article h1 {
-  font-size: 1.5rem;
-  font-weight: normal;
-  margin-bottom: 12px;
-}
-
-article p {
-  text-align: justify;
+.article-content p {
+  margin: 0 0 1em 0;
+  text-align: justify !important;
   text-justify: inter-word;
-  line-height: 1.6;
+}
+
+.article-content ul {
+  list-style: disc;
+  padding-left: 1.4em;
   margin-bottom: 1em;
 }
 
-article .meta {
-  font-size: 0.85rem;
-  color: #6f6a63;
-  margin-bottom: 24px;
+.article-content li {
+  padding: 0.25em 0;
 }
 
-footer {
-  margin-top: 96px;
-  font-size: 0.85rem;
-  color: #6f6a63;
+.article-content h3 {
+  margin-top: 0.6em;
 }
 
-article .article-content ul {
-  list-style: disc inside;
-  padding-left: 1.2em;
-  border: none;
-}
+/* =========================
+   Responsive
+========================= */
 
-article .article-content li {
-  list-style: disc;
-  padding: 0.2em 0;
-  border: none;
-  cursor: auto;
-}
-
-#blog-list li {
-  list-style: none;       /* 保持不显示圆点 */
-  padding: 12px 16px;
-  border-bottom: 1px solid #ece7df;
-  cursor: pointer;
-}
-
-#blog-list li:hover {
-  color: #8b6b3e;
-}
-
-.blog-title {
-  font-size: 1rem;
-  font-weight: normal;
-  line-height: 1.4;
-}
-
-.blog-date {
-  font-size: 0.85rem;
-  color: #6f6a63;
-  margin-top: 2px;
-  line-height: 1.2;
-}
-
-/* 手机、平板竖屏优化 */
 @media (max-width: 768px) {
   .container {
-    max-width: 100%;     /* 占满屏幕宽度 */
-    padding: 48px 16px;  /* 减小 padding，更适合小屏幕 */
+    max-width: 100%;
+    padding: 48px 16px;
   }
 
   header {
-    flex-direction: column;   /* 导航竖排 */
+    flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
@@ -322,4 +187,63 @@ article .article-content li {
   nav a {
     margin-left: 0;
   }
+}
+
+#projects {
+  margin-top: 0px;
+}
+
+#projects h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0px;
+  border-bottom: 1px solid #8b6b3e;
+  padding-bottom: 4px;
+}
+
+.project {
+  margin-bottom: 20px;
+  padding: 0px 0;
+}
+
+.project-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 0;
+  color: var(--subaccent);
+}
+
+.project-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 800px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.project-links {
+  margin-bottom: 0; /* 确保没有底部外边距 */
+  margin-top: 0; /* 确保没有顶部外边距 */
+  padding: 0, 0;
+}
+
+.project-links a {
+  font-size: 1.1rem;
+  margin-right: 0px;
+  text-decoration: none;
+  color: var(--accent);
+  transition: border 0.2s ease;
+}
+
+.project-links a:hover {
+  border-bottom: 1px solid #555;
+  color: var(--subaccent);
+}
+
+
+.section-block {
+  margin-bottom: 12px;
 }

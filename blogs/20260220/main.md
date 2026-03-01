@@ -2,7 +2,7 @@
 > 
 > Yet the gap between impressive demonstrations and provable safety remains stubbornly wide.
 We can generate increasingly realistic behaviors — but can we explain their limits?
-And more importantly, can we certify them?
+And more importantly, can we certify whether they are 'realistic'?
 
 Over the past few years, scenario-based testing has become one of the dominant paradigms in the validation and verification of autonomous driving systems and other safety-critical AI-enabled systems. The motivation is straightforward: real-world testing is expensive, slow, and often dangerous, while simulation-based testing allows developers to explore a much larger space of possible system behaviors at a fraction of the cost.
  
@@ -14,7 +14,7 @@ While AI-driven scenario generation is undoubtedly a powerful tool, it does not 
 
 This article argues that scenario generation alone is insufficient for safety-critical validation, and that formal methods are a necessary complement. The goal is not to replace AI-based approaches, but to clarify their limitations and to explain why formal specification and verification remain indispensable when safety, accountability, and regulatory compliance are at stake.
 
-## **The Rise of Scenario-Based Testing and the Coverage Illusion**
+## The Rise of Scenario-Based Testing and the Coverage Illusion
 
 Scenario-based testing emerged as a response to the limitations of traditional test-case-driven validation. In early autonomous driving development, test scenarios were often manually designed by engineers, focusing on well-known situations such as lane changes, car-following, or pedestrian crossings. While effective for basic functionality, this approach quickly became unscalable as system complexity increased.
 
@@ -28,15 +28,15 @@ This assumption, however, deserves closer scrutiny.
 
 At first glance, scenario-based testing appears to offer systematic coverage. Engineers define scenarios such as cut-ins, unprotected left turns, pedestrian crossings, or merging behaviors, then vary parameters like speed, distance, timing, and weather conditions. With sufficient automation and computational resources, thousands—or even millions—of such scenarios can be generated and simulated.
 
-Yet this apparent breadth masks a deeper issue: **scenario enumeration samples isolated points in an underlying continuous state space**.
+But this intuitive perspective masks a deeper issue: **scenario enumeration samples isolated points in an underlying continuous state space**.
 
 Autonomous driving systems operate over continuous variables: positions, velocities, accelerations, perception uncertainties, controller states, and internal neural representations. Safety-critical failures often occur not at typical operating points, but near **structured boundaries** — for example, when time-to-collision (TTC) approaches a critical threshold, when perception confidence degrades gradually, or when multiple subsystems interact in rare but feasible configurations.
 
-Public disengagement reports released by the California Department of Motor Vehicles consistently show that safety drivers intervene in situations involving subtle, compound interactions rather than textbook scenarios. Similarly, investigations by the U.S. National Transportation Safety Board (NTSB), including the 2018 Uber ATG fatal crash, highlight failures arising from edge cases that were not explicitly represented as predefined scenarios, despite extensive testing.
+Public disengagement reports released by the California Department of Motor Vehicles (DMV) consistently show that safety drivers intervene in situations involving subtle, compound interactions rather than textbook scenarios. Similarly, investigations by the U.S. National Transportation Safety Board (NTSB), including the 2018 Uber ATG fatal crash, highlight failures arising from edge cases that were not explicitly represented as predefined scenarios, despite extensive testing.
 
 In other words, **the absence of a scenario does not imply the absence of risk**.
 
-## **AI-Generated Scenarios: A Structural Solution or a Statistical Shortcut?**
+## AI-Generated Scenarios: A Structural Solution or a Statistical Shortcut?
 
 The recent success of LLM and generative AI has significantly accelerated interest in automated scenario generation. Unlike traditional scenario enumeration, which produces isolated test cases, AI-driven approaches reconstruct scenarios from data distributions. In doing so, they implicitly embed a probabilistic measure over the scenario space, sampling from a learned latent representation rather than manually enumerating discrete cases. The sampling process can be steered through conditioning signals — in LLM-based systems, these signals are commonly referred to as prompts.
 
@@ -58,13 +58,21 @@ This is not merely a theoretical concern. Research in falsification-based testin
 
 Even the ISO 21448 standard (Safety of the Intended Functionality, SOTIF) explicitly acknowledges that hazardous behavior may arise without system faults, particularly due to performance limitations or unforeseen operational conditions. This perspective implicitly moves beyond enumerated scenarios and toward systematic exploration of unsafe behaviors.
 
-At the core of AI-driven scenario generation lies an implicit assumption: that the learned distribution is sufficiently representative of the space of possible failures. Yet generative models are optimized to reproduce what is plausible and statistically consistent with their training data — not to guarantee coverage of critical unsafe behaviors.
+At the core of AI-driven scenario generation lies an implicit assumption: that the learned distribution is sufficiently representative of the space of possible failures. Yet generative models are optimized to reproduce what is plausible and statistically consistent with their training data — not to guarantee coverage of critical unsafe behaviors. This means, while such models may occasionally extrapolate beyond observed samples, their objective functions do not explicitly target the discovery of structurally rare or previously unobserved failure modes. 
 
+This becomes particularly consequential in the context of SOTIF, where the goal is to progressively reduce the region of unknown unsafe behaviors. A data-driven generator can explore what it has learned to approximate; it cannot, by design alone, ensure systematic pressure on the truly unknown.
+
+<div style="text-align: center;">
+<img src="blogs/20260220/sotif.png" alt="SOTIF" width="300" height="200">
+</div>
+
+> *Fig 1. The SOTIF safety matrix from ISO Standard 21448 showcasing scenario categories. The goal is to compress the region 3 by systematically (not just statistically) transferring unknown hazardous scenarios into known ones.*
+
+Generative models reduce uncertainty in probability space; SOTIF seeks to reduce uncertainty in knowledge space. The two are related, but not equivalent, because statistical reconstruction does not imply structural completeness.
 From a safety assurance standpoint, this distinction is decisive. Safety is not concerned with what is likely to happen, but with what must not happen. Rare events, adversarial interactions, and subtle structural combinations often lie outside the support of the learned distribution and may never be generated — regardless of how sophisticated the model becomes.
 
-In short, statistical reconstruction does not imply structural completeness.
 
-## **Safety Is About Boundaries, Not Instances**
+## Safety Is About Boundaries, Not Instances
 
 The core limitation of scenario-based testing can be summarized succinctly:
 
@@ -80,12 +88,11 @@ This is why many safety-critical domains, including avionics and industrial cont
 
 For autonomous driving, the challenge is not generating more scenarios, but **understanding which regions of the system’s behavior space remain untested—and why**.
 
-
 ![Figure1](blogs/20260220/boundary.svg)
 
-> *Fig 1. Scenario-based testing samples isolated points in a continuous state space, while safety violations typically occur near structured boundaries. Increasing the number of scenarios does not guarantee coverage of these critical regions.*
+> *Fig 2. Scenario-based testing samples isolated points in a continuous state space, while safety violations typically occur near structured boundaries. Increasing the number of scenarios does not guarantee coverage of these critical regions.*
 
-## **How Formal Methods Complement Scenario-Based Testing**
+## How Formal Methods Complement Scenario-Based Testing
 
 Scenario-based testing answers:
 
@@ -122,16 +129,14 @@ Even AI-driven scenario generators benefit from this framing. Statistical divers
 
 ### Scenarios as Witnesses, Not Proof
 
-In this framework, scenarios are no longer standalone evidence of safety—they are **witnesses**:
+In a framework where formal methods clearly define the boundaries of safety, scenarios are no longer standalone evidence of safety—they are **witnesses**:
 
-* Passing scenarios witness consistency with a safety property.
-* Failing scenarios witness the existence of a counterexample.
+- Passing scenarios witness consistency with a safety property.
+- Failing scenarios witness the existence of a counterexample.
 
-Each scenario becomes traceable to a formal property, a region of the state space, and a set of assumptions. This traceability is what regulators, safety boards, and engineering teams increasingly require. It turns simulation outputs from isolated data points into **structured evidence** aligned with a defined operational model.
+Each scenario becomes traceable to a formal property, a fragile rule in a knowledge base, a region of the state space, or a set of assumptions. This traceability is what regulators, safety boards, and engineering teams increasingly require. It turns simulation outputs from isolated data points into **structured evidence** aligned with a defined operational model.
 
----
-
-### 3.4 From Parameter Spaces to Semantic Spaces
+### From Parameter Spaces to Semantic Spaces
 
 A common misconception is that formal methods must reason over raw continuous parameters—positions, velocities, accelerations, weather, timing offsets—which seems intractable.
 
@@ -141,149 +146,42 @@ Formal reasoning operates over this **semantic scenario space**, not over every 
 
 In other words, formal methods:
 
-* define valid scenario structures
-* constrain admissible agent interactions
-* provide guarantees at the level of semantic organization
+- define valid scenario structures
+- constrain admissible agent interactions
+- provide guarantees at the level of semantic organization
 
 This reframing aligns perfectly with scenario-based testing: the scenarios themselves remain concrete and interpretable, but now they are **anchored in structural safety reasoning**.
 
----
-
-### 3.5 Strategic Positioning
+### Strategic Positioning
 
 The most subtle but powerful effect of this perspective is organizational and conceptual:
 
-* Scenarios remain the interface engineers interact with.
-* Formal methods operate underneath, defining boundaries and guarantees.
-* Safety questions shift from “Did we test enough?” to “Have we consistently and completely described operationally relevant behaviors?”
+- Scenarios remain the interface engineers interact with.
+- Formal methods operate underneath, defining boundaries and guarantees.
+- Safety questions shift from “Did we test enough?” to “Have we consistently and completely described operationally relevant behaviors?”
 
 At this point, formal methods are **normalized as infrastructure**: they are not a tool to debate, but the foundational layer that gives meaning and structure to scenario-based testing.
 
 ![Figure2](blogs/20260220/formal.svg)
 
-> Semantic scenario space for autonomous driving: blue points show randomly generated or AI-driven scenarios, while orange points represent formal-method-guided exploration focused on the safety boundary. Black curve denotes the formally defined safety boundary, and the red shaded area highlights regions of potential safety violations. This illustrates how formal methods provide structural guidance to scenario exploration, enabling efficient and targeted coverage of critical behaviors.
-
+> *Fig 2. Semantic scenario space for autonomous driving: blue points show randomly generated or AI-driven scenarios, while orange points represent formal-method-guided exploration focused on the safety boundary. Black curve denotes the formally defined safety boundary, and the red shaded area highlights regions of potential safety violations. This illustrates how formal methods provide structural guidance to scenario exploration, enabling efficient and targeted coverage of critical behaviors.*
 
 ## Why Formal Methods Create Commercial Leverage, Not Just Technical Rigor
 
-> Formal methods do not replace AI-driven simulation or scenario generation. They **convert outputs into measurable, defensible, and reusable value**—something AI alone struggles to provide.
+Formal methods are often framed as instruments of mathematical rigor. In safety-critical autonomy, however, their deeper value lies elsewhere: they convert transient simulation outputs into persistent, interpretable assets.
 
----
+Large-scale simulation consumes enormous computational resources. However, without structural anchors, its results remain episodic—impressive in volume, but difficult to reuse, audit, or compare across iterations. Formal specifications introduce continuity and traceability by defining explicit safety properties, assumption boundaries, and measurable robustness signals that persist beyond any single experiment. In this sense, scenario-based testing would no longer be a series of isolated test runs, but a structured body of evidence chains.
 
-#### 5.1 From Simulation to Reusable Assets
+This persistence has direct economic consequences. Simulation effort is no longer discarded with each software update. Safety claims can be traced months or years later. Coverage discussions become comparable across architectures and teams. The result is not merely stronger technical guarantees, but lower marginal cost of iteration and reduced uncertainty in long development cycles.
 
-*Simulation consumes huge computational resources. Without structure, much of this effort produces ephemeral value.*
+As deployment approaches, the center of gravity shifts further—from performance to explanation. Regulators, partners, and internal stakeholders do not ask how many scenarios were generated. They ask which safety claims are being made, under what assumptions, and how those claims are justified. Scenario generation alone does not naturally provide this chain of reasoning. Formal specifications do. They make safety explicit, measurable, and reviewable—transforming simulation output into certifiable evidence.
 
-Formal methods introduce **persistent artifacts**:
+More subtly, formal methods reshape organizations. They establish a shared semantic interface: engineers reason about guarantees, simulation teams target boundary conditions, and management tracks risk as a quantified signal rather than a narrative. In this way, technical discipline becomes operational leverage.
 
-* explicit safety specifications
-* assumption sets and validity domains
-* robustness metrics that can be tracked over time
+## Toward Specification-Centered Testing
 
-These artifacts **turn simulation results into reusable assets**:
+The deeper shift is conceptual. Autonomy testing is no longer defined by the number of scenarios executed, but by how safety measures are characterized and maintained along iterations. Scenario-centric workflows may scale poorly as systems grow since a scenario involves the multiplication of the parameter spaces of all traffic elements. Once the testing configuation is updated, all scenarios need to be regenerated and tested. Specification-centered platforms, however, invert the problem by giving a hint on what must always hold and where system robustness is weakest. In this sense, scenarios become instruments for probing those properties, not artifacts to be accumulated.
 
-* across software versions
-* across system architectures
-* for audits months or years later
+Within such a framework, AI and formal methods are not competitors. AI explores possibilities while formal methods govern the boundaries. Specifications define semantic targets while generative models stress those targets. Safety evolves from an implicit by-product of testing to an explicit and continuously tracked signal.
 
-This persistence directly **reduces wasted computation** and **lowers the cost of unknown unknowns**, while maintaining alignment with long development cycles.
-
----
-
-#### 5.2 Structured Exploration and Faster Iteration
-
-Formal specifications act as **coverage coordinates**, guiding both AI-driven and manual scenario exploration. They help teams:
-
-* focus on **high-risk or boundary regions** rather than redundant testing
-* identify where marginal simulation adds insight
-* iterate quickly without “resetting the narrative” after system updates
-
-In other words, formal methods allow **efficient exploration of the semantic scenario space** while keeping safety narratives stable and defensible.
-
----
-
-#### 5.3 Certification, Liability, and the Cost of Explanation
-
-As systems approach deployment, **explainability and accountability** dominate costs:
-
-* Regulators ask: *“What safety claims are you making, under which assumptions, and how do you know they hold?”*
-* AI-generated scenarios alone do not naturally provide this traceable chain.
-
-Formal methods provide:
-
-* explicit safety claims
-* quantitative robustness mapping
-* documented assumptions
-
-This **reduces certification costs** and simplifies internal/external review, making simulation results actionable in regulated contexts.
-
----
-
-#### 5.4 Formal Methods as an Organizational Interface
-
-Beyond tooling, formal methods create a **shared language**:
-
-* engineers reason locally about guarantees
-* simulation teams generate targeted evidence
-* management tracks risk with concrete metrics
-
-This alignment **scales across teams and organizational layers**, turning technical rigor into a strategic commercial advantage.
-
----
-
-## Toward Specification-Centered Testing Platforms
-
-Autonomy testing is no longer about generating more scenarios or running more simulations. The emerging differentiator lies in **how safety intent is represented, preserved, and operationalized** across the lifecycle. Specification-centered platforms embody this principle.
-
----
-
-### From Scenario-Centric to Specification-Centric Thinking
-
-Early testing naturally focused on scenarios: concrete situations, replayable failures, realistic environments. Effective at first, this approach **struggles to scale** as systems and teams grow: scenario sets explode combinatorially, coverage reasoning fragments, and results lose consistency across time.
-
-Specification-centered platforms invert the question:
-
-> “Which properties must always hold, and where are they weakest?”
-
-Scenarios become **means**, not ends. Safety is now defined by properties and boundaries, not by isolated instances.
-
----
-
-## 6.2 AI as Generator, Formal Methods as Governor
-
-In this framework:
-
-* AI generates diverse scenarios, exploring edge cases and unexpected interactions.
-* Formal methods define **what “safe” means**, structure coverage, and constrain interpretation.
-
-Together, they form a feedback loop:
-
-1. specifications define targets
-2. AI stresses them through scenario generation
-3. robustness metrics highlight gaps
-
-Safety becomes **explicit, measurable, and traceable**—not implicit or assumed.
-
----
-
-## 6.3 Continuous, Measurable Safety
-
-Specification-centered platforms enable safety as a **tracked signal**:
-
-* robustness trends are monitored over time
-* regressions are detected early
-* improvements are objectively quantified
-
-This continuity mirrors the evolution of CI/CD in software engineering—applied to safety assurance.
-
----
-
-## 6.4 Narrowing the Focus: Safety as Specification and Signal
-
-Across domains—autonomous vehicles, robotics, aerospace, algorithmic systems—the recurring lesson is simple but powerful:
-
-> **Safety must be specified and continuously measured, not inferred from scenario counts or isolated tests.**
-
-By anchoring on explicit specifications and robust metrics, platforms transform testing from a collection of experiments into a structured, traceable process. This **narrowed-down focus** unites AI, formal methods, and simulation under a coherent safety framework, providing both **technical rigor and operational leverage**.
-
----
+Therefore, the advantage of specification-centered testing is structural and systematic. By anchoring safety in explicit robustness measures, simulation effort is converted into durable and iteratable knowledge. This is the true difference to the conventional scenario-centered testing framework. This is not a technique confined to automated vehicles. It reflects a broader shift in how safety-critical systems are engineered: from accumulating scenarios to structuring guarantees. The same logic extends naturally to robotics, aerospace, and other domains where safety must be specified and continuously defended.

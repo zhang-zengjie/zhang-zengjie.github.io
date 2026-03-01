@@ -12,7 +12,7 @@ Markdown blogs can be pre-rendered or injected later
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Your Name — Portfolio</title>
+  <title>Zengjie Zhang — Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,36 +22,75 @@ Markdown blogs can be pre-rendered or injected later
 <body>
   <div class="container">
     <header>
-      <div class="name">Your Name</div>
+      <div class="name">Zengjie Zhang</div>
       <nav>
         <a href="home.html" class="active">Home</a>
         <a href="blogs.html">Blogs</a>
       </nav>
     </header>
 
-    <section>
+    <section class="section-block">
       <h2>About</h2>
       <p>
-        I work on formal verification, simulation, and safety testing of
-        autonomous systems. My focus is on building interpretable, mathematically
-        grounded tools for evaluating AI-driven decision making.
+        I work on risk-aware verification and control of safety-critical autonomous systems, focusing on understanding and formalizing their safety and performance boundaries under uncertainty.
       </p>
       <p>
-        This site is a deliberately small surface: selected work, ongoing
-        directions, and written thoughts.
+        My background spans robust control, observer design, reinforcement learning, and formal methods. My research across these areas has been driven by a consistent and persistent thread: 
+        <i>how to reason about safety in systems that operate beyond idealized assumptions</i>, such as under disturbance, partial observability, imperfect policies, and complex interaction environments.
+      </p>
+      <p>
+        Currently, I am building specification-centered verification and simulation tools for autonomous vehicles and robots. Rather than relying solely on scenario enumeration, I emphasize property-based reasoning, risk-aware modeling, and mathematically grounded evaluation of safety claims.
+      </p>
+      <p>
+        I am particularly interested in making safety validation interpretable, structural, and transparent, thus enabling rigorous analysis of edge cases, long-tail risks and rare events in AI-driven decision systems.
       </p>
     </section>
 
     <section>
       <h2>Selected Projects</h2>
+
       <div class="project">
-        <div class="project-title">Formal Scenario Verification for Autonomous Driving</div>
-        <div class="project-meta">STL / LTL · Simulation · Safety Metrics</div>
+        <div class="project-title">
+          Structured Intent Uncertainty for Risk-Aware Control
+        </div>
+
+        <div class="project-description">
+          <p>
+          This project investigates how uncertainty in other agents' intentions can be explicitly parameterized and embedded into controller design. 
+          Instead of treating interaction uncertainty heuristically, intent is modeled as structured random variables. 
+          Polynomial Chaos Expansion (PCE) is used to approximate uncertainty propagation through system dynamics.
+          </p>
+          <p>
+          The resulting controller is probabilistically correct-by-design with respect to interaction risk. 
+          The work demonstrates that complex multi-agent interaction environments can be approximated using low-dimensional stochastic representations — 
+          making risk-aware control computationally tractable.
+          </p>
+        </div>
+
+        <div class="project-links">
+          [ <a href="https://github.com/yourname/intent-aware-control" target="_blank">Code</a> ]
+          [ <a href="https://your-demo-link.com" target="_blank">Demo</a> ]
+          [ <a href="https://arxiv.org/abs/xxxx.xxxxx" target="_blank">Paper</a> ]
+        </div>
       </div>
+
       <div class="project">
-        <div class="project-title">Policy-driven Scenario Sampling</div>
-        <div class="project-meta">Coverage-guided exploration · Edge cases</div>
+        <div class="project-title">
+          Policy-driven Scenario Sampling
+        </div>
+
+        <div class="project-description">
+          Coverage-guided scenario generation for safety validation. 
+          Instead of enumerating static cases, sampling is driven by policy-induced state visitation 
+          to expose edge cases and rare-event failure modes.
+        </div>
+
+        <div class="project-links">
+          <a href="https://github.com/yourname/scenario-sampling" target="_blank">[Code]</a>
+          <a href="#">[Paper]</a>
+        </div>
       </div>
+
     </section>
 
     <section>
