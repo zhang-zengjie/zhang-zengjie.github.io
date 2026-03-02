@@ -76,18 +76,26 @@ Markdown blogs can be pre-rendered or injected later
 
       <div class="project">
         <div class="project-title">
-          Policy-driven Scenario Sampling
+          Risk-Aware Control for Multi-Agent Systems 
         </div>
 
         <div class="project-description">
-          Coverage-guided scenario generation for safety validation. 
-          Instead of enumerating static cases, sampling is driven by policy-induced state visitation 
-          to expose edge cases and rare-event failure modes.
+          <p>
+          This project investigates how uncertainty in other agents' intentions can be explicitly parameterized and embedded into controller design. 
+          Instead of treating interaction uncertainty heuristically, intent is modeled as structured random variables. 
+          Polynomial Chaos Expansion (PCE) is used to approximate uncertainty propagation through system dynamics.
+          </p>
+          <p>
+          The resulting controller is probabilistically correct-by-design with respect to interaction risk. 
+          The work demonstrates that complex multi-agent interaction environments can be approximated using low-dimensional stochastic representations — 
+          making risk-aware control computationally tractable.
+          </p>
         </div>
 
         <div class="project-links">
-          <a href="https://github.com/yourname/scenario-sampling" target="_blank">[Code]</a>
-          <a href="#">[Paper]</a>
+          [ <a href="https://github.com/yourname/intent-aware-control" target="_blank">Code</a> ]
+          [ <a href="https://your-demo-link.com" target="_blank">Demo</a> ]
+          [ <a href="https://arxiv.org/abs/xxxx.xxxxx" target="_blank">Paper</a> ]
         </div>
       </div>
 
@@ -96,9 +104,28 @@ Markdown blogs can be pre-rendered or injected later
     <section>
       <h2>Ongoing</h2>
       <div class="project">
-        <div class="project-title">Web-based Scenario Testing Platform</div>
-        <div class="project-meta">CARLA · Leaderboard · Interactive GUI</div>
+      <div class="project-title">
+        Specification-Centered Safety Validation Benchmark (Ongoing)
       </div>
+
+      <div class="project-description">
+        I am currently developing a specification-centered testing and validation framework 
+        for safety-critical autonomous systems. The goal is to move beyond scenario enumeration 
+        and toward property-driven evaluation of system behavior under structured uncertainty.
+
+        The framework integrates formal specifications, risk-aware modeling, and 
+        adversarial scenario generation to construct measurable safety boundaries 
+        instead of isolated test cases.
+
+        The core infrastructure and implementation are under active development 
+        as part of a startup initiative. Architectural concepts and methodology 
+        can be discussed upon request.
+      </div>
+
+      <div class="project-links">
+        <span class="ongoing-tag">In Development · Proprietary Implementation</span>
+      </div>
+    </div>
     </section>
 
     <section>
