@@ -1,14 +1,4 @@
 <!DOCTYPE html>
-<!--
-Minimalist Portfolio
-Pages: home.html, blogs.html
-Style: restrained, elegant, low-saturation brown & khaki
-Font stack avoids dependency; can be replaced later with serif display fonts
-Markdown blogs can be pre-rendered or injected later
--->
-
-<!-- ========== home.html ========== -->
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -18,6 +8,9 @@ Markdown blogs can be pre-rendered or injected later
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  
+  <!-- KaTeX CSS for math formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 </head>
 <body>
   <div class="container">
@@ -48,84 +41,32 @@ Markdown blogs can be pre-rendered or injected later
 
     <section>
       <h2>Selected Projects</h2>
-
-      <div class="project">
-        <div class="project-title">
-          Structured Intent Uncertainty for Risk-Aware Control
-        </div>
-
-        <div class="project-description">
-          <p>
-          This project investigates how uncertainty in other agents' intentions can be explicitly parameterized and embedded into controller design. 
-          Instead of treating interaction uncertainty heuristically, intent is modeled as structured random variables. 
-          Polynomial Chaos Expansion (PCE) is used to approximate uncertainty propagation through system dynamics.
-          </p>
-          <p>
-          The resulting controller is probabilistically correct-by-design with respect to interaction risk. 
-          The work demonstrates that complex multi-agent interaction environments can be approximated using low-dimensional stochastic representations — 
-          making risk-aware control computationally tractable.
-          </p>
-        </div>
-
-        <div class="project-links">
-          [ <a href="https://github.com/yourname/intent-aware-control" target="_blank">Code</a> ]
-          [ <a href="https://your-demo-link.com" target="_blank">Demo</a> ]
-          [ <a href="https://arxiv.org/abs/xxxx.xxxxx" target="_blank">Paper</a> ]
-        </div>
-      </div>
-
-      <div class="project">
-        <div class="project-title">
-          Risk-Aware Control for Multi-Agent Systems 
-        </div>
-
-        <div class="project-description">
-          <p>
-          This project investigates how uncertainty in other agents' intentions can be explicitly parameterized and embedded into controller design. 
-          Instead of treating interaction uncertainty heuristically, intent is modeled as structured random variables. 
-          Polynomial Chaos Expansion (PCE) is used to approximate uncertainty propagation through system dynamics.
-          </p>
-          <p>
-          The resulting controller is probabilistically correct-by-design with respect to interaction risk. 
-          The work demonstrates that complex multi-agent interaction environments can be approximated using low-dimensional stochastic representations — 
-          making risk-aware control computationally tractable.
-          </p>
-        </div>
-
-        <div class="project-links">
-          [ <a href="https://github.com/yourname/intent-aware-control" target="_blank">Code</a> ]
-          [ <a href="https://your-demo-link.com" target="_blank">Demo</a> ]
-          [ <a href="https://arxiv.org/abs/xxxx.xxxxx" target="_blank">Paper</a> ]
-        </div>
-      </div>
-
+      
+      <!-- 项目列表容器 -->
+      <div id="project-list" style="display: none;"></div>
+      
+      <!-- 项目内容容器 -->
+      <div id="project-content"></div>
+      
+      <!-- 静态项目预览容器 -->
+      <div id="static-projects"></div>
     </section>
 
     <section>
       <h2>Ongoing</h2>
       <div class="project">
-      <div class="project-title">
-        Specification-Centered Safety Validation Benchmark (Ongoing)
+        <div class="project-title">
+          Specification-Centered Safety Validation Benchmark (Ongoing)
+        </div>
+        <div class="project-description">
+          I am currently developing a specification-centered testing and validation framework 
+          for safety-critical autonomous systems. The goal is to move beyond scenario enumeration 
+          and toward property-driven evaluation of system behavior under structured uncertainty.
+        </div>
+        <div class="project-links">
+          <span class="ongoing-tag">In Development · Proprietary Implementation</span>
+        </div>
       </div>
-
-      <div class="project-description">
-        I am currently developing a specification-centered testing and validation framework 
-        for safety-critical autonomous systems. The goal is to move beyond scenario enumeration 
-        and toward property-driven evaluation of system behavior under structured uncertainty.
-
-        The framework integrates formal specifications, risk-aware modeling, and 
-        adversarial scenario generation to construct measurable safety boundaries 
-        instead of isolated test cases.
-
-        The core infrastructure and implementation are under active development 
-        as part of a startup initiative. Architectural concepts and methodology 
-        can be discussed upon request.
-      </div>
-
-      <div class="project-links">
-        <span class="ongoing-tag">In Development · Proprietary Implementation</span>
-      </div>
-    </div>
     </section>
 
     <section>
@@ -141,5 +82,26 @@ Markdown blogs can be pre-rendered or injected later
       © Zengjie · Personal Portfolio · <a href="mailto:zengjie@azonai.co">Contact</a>
     </footer>
   </div>
+
+  <!-- 脚本加载顺序很重要 -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  <script src="js/markdown-loader.js"></script>
+  <script src="js/project-loader.js"></script>
+  <script>
+    // 初始化项目加载器
+    const projectLoader = new ProjectLoader();
+    
+    // 检查是否需要加载特定项目
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('projectId')) {
+      // 显示单个项目
+      projectLoader.init();
+    } else {
+      // 显示所有项目预览
+      projectLoader.renderStaticProjects();
+    }
+  </script>
 </body>
 </html>

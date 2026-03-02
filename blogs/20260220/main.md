@@ -63,7 +63,7 @@ At the core of AI-driven scenario generation lies an implicit assumption: that t
 This becomes particularly consequential in the context of SOTIF, where the goal is to progressively reduce the region of unknown unsafe behaviors. A data-driven generator can explore what it has learned to approximate; it cannot, by design alone, ensure systematic pressure on the truly unknown.
 
 <div style="text-align: center;">
-<img src="blogs/20260220/sotif.png" alt="SOTIF" width="300" height="200">
+<img src="blogs/20260220/sotif.png" alt="SOTIF" width="300">
 </div>
 
 > *Fig 1. The SOTIF safety matrix from ISO Standard 21448 showcasing scenario categories. The goal is to compress the region 3 by systematically (not just statistically) transferring unknown hazardous scenarios into known ones.*
@@ -88,7 +88,9 @@ This is why many safety-critical domains, including avionics and industrial cont
 
 For autonomous driving, the challenge is not generating more scenarios, but **understanding which regions of the system’s behavior space remain untested—and why**.
 
-![Figure1](blogs/20260220/boundary.svg)
+<div style="text-align: center;">
+<img src="blogs/20260220/boundary.svg" alt="SOTIF" width="700">
+</div>
 
 > *Fig 2. Scenario-based testing samples isolated points in a continuous state space, while safety violations typically occur near structured boundaries. Increasing the number of scenarios does not guarantee coverage of these critical regions.*
 
@@ -162,7 +164,9 @@ The most subtle but powerful effect of this perspective is organizational and co
 
 At this point, formal methods are **normalized as infrastructure**: they are not a tool to debate, but the foundational layer that gives meaning and structure to scenario-based testing.
 
-![Figure2](blogs/20260220/formal.svg)
+<div style="text-align: center;">
+<img src="blogs/20260220/formal.svg" alt="SOTIF" width="700">
+</div>
 
 > *Fig 2. Semantic scenario space for autonomous driving: blue points show randomly generated or AI-driven scenarios, while orange points represent formal-method-guided exploration focused on the safety boundary. Black curve denotes the formally defined safety boundary, and the red shaded area highlights regions of potential safety violations. This illustrates how formal methods provide structural guidance to scenario exploration, enabling efficient and targeted coverage of critical behaviors.*
 

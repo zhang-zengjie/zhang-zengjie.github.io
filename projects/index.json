@@ -1,0 +1,32 @@
+[
+  {
+    "id": "intent-aware-control",
+    "title": "Structured Intent Uncertainty for Risk-Aware Control",
+    "date": "2026",
+    "file": "projects/intent-aware-control.md",
+    "links": {
+      "code": "https://github.com/yourname/intent-aware-control",
+      "demo": "https://your-demo-link.com",
+      "paper": "https://arxiv.org/abs/xxxx.xxxxx"
+    }
+  },
+  {
+    "id": "multi-agent-control",
+    "title": "Risk-Aware Control for Multi-Agent Systems",
+    "date": "2025",
+    "file": "projects/multi-agent-control.md",
+    "links": {
+      "code": "https://github.com/yourname/multi-agent-control",
+      "paper": "https://arxiv.org/abs/xxxx.xxxxx"
+    }
+  },
+  {
+    "id": "specification-benchmark",
+    "title": "Specification-Centered Safety Validation Benchmark",
+    "date": "Ongoing",
+    "file": "projects/specification-benchmark.md",
+    "links": {
+      "status": "In Development · Proprietary Implementation"
+    }
+  }
+]

@@ -33,7 +33,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-  margin: 0 0 1em 0;
+  margin: 0 0 0.5em 0;
   text-align: justify;
   text-justify: inter-word;
 }
@@ -246,4 +246,75 @@ article code {
 
 .section-block {
   margin-bottom: 12px;
+}
+
+
+
+
+
+
+
+/* 在 style.css 末尾添加 */
+
+.project {
+  position: relative;
+  margin-bottom: 40px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-description-wrapper {
+  position: relative;
+  max-height: 150px;  /* 收起时的高度 */
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.project-description-wrapper.expanded {
+  max-height: 2000px;  /* 展开时的高度，设大一点确保完全显示 */
+  transition: max-height 0.5s ease-in;
+}
+
+/* 渐变遮罩 - 仅在收起时显示 */
+.project-description-wrapper:not(.expanded)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, var(--bg) 90%);
+  pointer-events: none;  /* 让点击可以穿透 */
+}
+
+.project-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 12px;
+  max-width: 800px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+/* 展开/收起按钮样式 */
+.toggle-button {
+  display: inline-block;
+  margin: 8px 0 12px 0;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--accent);
+}
+
+.toggle-button:hover {
+  border-bottom: 1px solid var(--accent);
+}
+
+/* 项目链接样式保持不变 */
+.project-links {
+  margin-top: 8px;
 }
