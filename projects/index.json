@@ -2,7 +2,7 @@
   {
     "id": "intent-aware-control",
     "title": "Structured Intent Uncertainty for Risk-Aware Control",
-    "date": "2026",
+    "date": "2023-2024",
     "file": "projects/intent-aware-control.md",
     "links": {
       "code": "https://github.com/yourname/intent-aware-control",
@@ -22,9 +22,9 @@
   },
   {
     "id": "specification-benchmark",
-    "title": "Specification-Centered Safety Validation Benchmark",
-    "date": "Ongoing",
-    "file": "projects/specification-benchmark.md",
+    "title": "AI-Driven Planning with Structured Priors",
+    "date": "2021 - 2022",
+    "file": "projects/learning-based.md",
     "links": {
       "status": "In Development · Proprietary Implementation"
     }

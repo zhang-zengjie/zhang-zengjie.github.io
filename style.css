@@ -25,7 +25,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: "Spectral", "Georgia", "Times New Roman", serif;
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -245,7 +245,7 @@ article code {
 /* 项目描述文字样式 */
 .project-description {
   font-size: 1.1rem;  /* 保持与正文一致 */
-  line-height: 1.6;
+  line-height: 1.4;
   color: #444;
   margin-top: 10px;
   margin-bottom: 10px;
