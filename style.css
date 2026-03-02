@@ -29,7 +29,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: var(--accent);  /* 例如：#8b6b3e (使用你的accent颜色) */
+  color: var(--accent);
 }
 
 p {
@@ -81,7 +81,7 @@ footer {
 }
 
 /* =========================
-   Blog List (Only Blog List)
+   Blog List
 ========================= */
 
 #blog-list {
@@ -146,8 +146,6 @@ article code {
   font-size: 0.9em;
 }
 
-/* Markdown content wrapper */
-
 .article-content p {
   margin: 0 0 1em 0;
   text-align: justify !important;
@@ -189,6 +187,10 @@ article code {
   }
 }
 
+/* =========================
+   Projects Section (合并后的样式)
+========================= */
+
 #projects {
   margin-top: 0px;
 }
@@ -202,8 +204,10 @@ article code {
 }
 
 .project {
-  margin-bottom: 20px;
-  padding: 0px 0;
+  position: relative;
+  margin-bottom: 40px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .project-title {
@@ -213,56 +217,7 @@ article code {
   color: var(--subaccent);
 }
 
-.project-description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #444;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  max-width: 800px;
-  text-align: justify;
-  text-justify: inter-word;
-}
-
-.project-links {
-  margin-bottom: 0; /* 确保没有底部外边距 */
-  margin-top: 0; /* 确保没有顶部外边距 */
-  padding: 0, 0;
-}
-
-.project-links a {
-  font-size: 1.1rem;
-  margin-right: 0px;
-  text-decoration: none;
-  color: var(--accent);
-  transition: border 0.2s ease;
-}
-
-.project-links a:hover {
-  border-bottom: 1px solid #555;
-  color: var(--subaccent);
-}
-
-
-.section-block {
-  margin-bottom: 12px;
-}
-
-
-
-
-
-
-
-/* 在 style.css 末尾添加 */
-
-.project {
-  position: relative;
-  margin-bottom: 40px;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border);
-}
-
+/* 项目描述包装器 - 用于渐变和展开/收起 */
 .project-description-wrapper {
   position: relative;
   max-height: 150px;  /* 收起时的高度 */
@@ -271,7 +226,7 @@ article code {
 }
 
 .project-description-wrapper.expanded {
-  max-height: 2000px;  /* 展开时的高度，设大一点确保完全显示 */
+  max-height: 2000px;  /* 展开时的高度 */
   transition: max-height 0.5s ease-in;
 }
 
@@ -284,14 +239,16 @@ article code {
   right: 0;
   height: 80px;
   background: linear-gradient(to bottom, transparent, var(--bg) 90%);
-  pointer-events: none;  /* 让点击可以穿透 */
+  pointer-events: none;
 }
 
+/* 项目描述文字样式 */
 .project-description {
-  font-size: 0.95rem;
+  font-size: 1.1rem;  /* 保持与正文一致 */
   line-height: 1.6;
   color: #444;
-  margin-bottom: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   max-width: 800px;
   text-align: justify;
   text-justify: inter-word;
@@ -314,7 +271,27 @@ article code {
   border-bottom: 1px solid var(--accent);
 }
 
-/* 项目链接样式保持不变 */
+/* 项目链接样式 */
 .project-links {
   margin-top: 8px;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.project-links a {
+  font-size: 1.1rem;
+  margin-right: 0px;
+  text-decoration: none;
+  color: var(--accent);
+  transition: border 0.2s ease;
+}
+
+.project-links a:hover {
+  border-bottom: 1px solid #555;
+  color: var(--subaccent);
+}
+
+/* 其他 */
+.section-block {
+  margin-bottom: 12px;
 }

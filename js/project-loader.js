@@ -2,85 +2,88 @@
 class ProjectLoader extends MarkdownLoader {
   constructor() {
     super({
-      contentContainerId: 'project-content',
-      listContainerId: 'project-list',
       indexUrl: 'projects/index.json',
-      contentType: 'project',
-      enableMath: true  // 启用数学公式
+      enableMath: true
     });
   }
 
-  // 重写 renderContent 以包含项目链接和数学公式支持
-  async renderContent(entry) {
-    const contentEl = document.getElementById(this.contentContainerId);
-    const listEl = document.getElementById(this.listContainerId);
-    const staticProjectsEl = document.getElementById('static-projects');
-    
-    if (!contentEl) return;
-    
-    const md = await this.loadMarkdown(entry.file);
-    
-    if (listEl) listEl.style.display = 'none';
-    if (staticProjectsEl) staticProjectsEl.style.display = 'none';
-    
-    // 生成项目链接HTML
-    const linksHtml = this.generateLinksHtml(entry.links);
-    
-    // 1. 先渲染Markdown内容（包含公式的原始文本）
-    contentEl.innerHTML = `
-      <div class="project">
-        <div class="project-title">${entry.title}</div>
-        <div class="project-description">
-          ${marked.parse(md)}
-        </div>
-        <div class="project-links">
-          ${linksHtml}
-        </div>
-      </div>
-    `;
-    
-    // 2. 再渲染数学公式（关键步骤）
-    const projectDesc = contentEl.querySelector('.project-description');
-    if (projectDesc && this.enableMath) {
-      this.renderMath(projectDesc);
+  // 加载所有项目并渲染
+  async loadAndRenderAllProjects() {
+    try {
+      const projects = await this.loadIndex();
+      const container = document.getElementById('projects-container');
+      
+      if (!container) return;
+      
+      container.innerHTML = '';
+      
+      for (const project of projects) {
+        const projectEl = await this.renderProjectCard(project);
+        container.appendChild(projectEl);
+      }
+      
+    } catch (error) {
+      console.error('Error loading projects:', error);
     }
   }
 
-  // 新增：渲染静态项目列表时也支持公式
-  async renderStaticProjects() {
-    const staticProjectsEl = document.getElementById('static-projects');
-    if (!staticProjectsEl) return;
+  // 渲染单个项目卡片
+  async renderProjectCard(project) {
+    const md = await this.loadMarkdown(project.file);
     
-    try {
-      const projects = await this.loadIndex();
+    // 创建项目卡片容器
+    const card = document.createElement('div');
+    card.className = 'project';
+    card.dataset.projectId = project.id;
+    
+    // 标题
+    const title = document.createElement('div');
+    title.className = 'project-title';
+    title.textContent = project.title;
+    card.appendChild(title);
+    
+    // 描述包装器（用于渐变和展开/收起）
+    const descWrapper = document.createElement('div');
+    descWrapper.className = 'project-description-wrapper';
+    
+    const desc = document.createElement('div');
+    desc.className = 'project-description';
+    desc.innerHTML = marked.parse(md);
+    descWrapper.appendChild(desc);
+    card.appendChild(descWrapper);
+    
+    // 展开/收起按钮
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'toggle-button';
+    toggleBtn.textContent = 'Expand';
+    toggleBtn.onclick = (e) => {
+      e.preventDefault();
+      const isExpanded = descWrapper.classList.contains('expanded');
       
-      staticProjectsEl.innerHTML = await Promise.all(projects.map(async project => {
-        // 读取项目的markdown文件获取描述
-        const md = await this.loadMarkdown(project.file);
-        // 只取第一段作为预览
-        const previewMd = md.split('\n\n')[0] + '...';
-        
-        return `
-          <div class="project">
-            <div class="project-title">${project.title}</div>
-            <div class="project-description">
-              ${marked.parse(previewMd)}
-            </div>
-            <div class="project-links">
-              <a href="?projectId=${project.id}">Read More →</a>
-            </div>
-          </div>
-        `;
-      }));
-      
-      // 渲染静态项目中的数学公式
-      if (this.enableMath) {
-        const projectDescs = staticProjectsEl.querySelectorAll('.project-description');
-        projectDescs.forEach(desc => this.renderMath(desc));
+      if (isExpanded) {
+        descWrapper.classList.remove('expanded');
+        toggleBtn.textContent = 'Collapse';
+      } else {
+        descWrapper.classList.add('expanded');
+        toggleBtn.textContent = 'Collapse';
       }
-    } catch (error) {
-      console.error('Error rendering static projects:', error);
+    };
+    card.appendChild(toggleBtn);
+    
+    // 项目链接
+    if (project.links) {
+      const linksDiv = document.createElement('div');
+      linksDiv.className = 'project-links';
+      linksDiv.innerHTML = this.generateLinksHtml(project.links);
+      card.appendChild(linksDiv);
     }
+    
+    // 渲染数学公式（如果有）
+    if (this.enableMath) {
+      this.renderMath(desc);
+    }
+    
+    return card;
   }
 
   generateLinksHtml(links) {

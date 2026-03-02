@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   
-  <!-- KaTeX CSS for math formulas -->
+  <!-- KaTeX CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 </head>
 <body>
@@ -42,39 +42,16 @@
     <section>
       <h2>Selected Projects</h2>
       
-      <!-- 项目列表容器 -->
-      <div id="project-list" style="display: none;"></div>
-      
-      <!-- 项目内容容器 -->
-      <div id="project-content"></div>
-      
-      <!-- 静态项目预览容器 -->
-      <div id="static-projects"></div>
-    </section>
-
-    <section>
-      <h2>Ongoing</h2>
-      <div class="project">
-        <div class="project-title">
-          Specification-Centered Safety Validation Benchmark (Ongoing)
-        </div>
-        <div class="project-description">
-          I am currently developing a specification-centered testing and validation framework 
-          for safety-critical autonomous systems. The goal is to move beyond scenario enumeration 
-          and toward property-driven evaluation of system behavior under structured uncertainty.
-        </div>
-        <div class="project-links">
-          <span class="ongoing-tag">In Development · Proprietary Implementation</span>
-        </div>
-      </div>
+      <!-- 项目容器 - 所有项目都会动态加载到这里 -->
+      <div id="projects-container"></div>
     </section>
 
     <section>
       <h2>Recent Writing</h2>
       <ul class="blog-list">
-        <li><a href="blogs.html">Temporality: Transient and Steady-State Life</a></li>
-        <li><a href="blogs.html">Why Interpretability Is a Form of Power</a></li>
-        <li><a href="blogs.html">On Coverage Metrics Beyond Accuracy</a></li>
+        <li><a href="blogs.html?id=temporality">Temporality: Transient and Steady-State Life</a></li>
+        <li><a href="blogs.html?id=interpretability">Why Interpretability Is a Form of Power</a></li>
+        <li><a href="blogs.html?id=coverage-metrics">On Coverage Metrics Beyond Accuracy</a></li>
       </ul>
     </section>
 
@@ -83,7 +60,7 @@
     </footer>
   </div>
 
-  <!-- 脚本加载顺序很重要 -->
+  <!-- 脚本加载 -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
@@ -93,15 +70,10 @@
     // 初始化项目加载器
     const projectLoader = new ProjectLoader();
     
-    // 检查是否需要加载特定项目
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('projectId')) {
-      // 显示单个项目
-      projectLoader.init();
-    } else {
-      // 显示所有项目预览
-      projectLoader.renderStaticProjects();
-    }
+    // 页面加载完成后渲染所有项目
+    document.addEventListener('DOMContentLoaded', () => {
+      projectLoader.loadAndRenderAllProjects();
+    });
   </script>
 </body>
 </html>
