@@ -1,8 +1,12 @@
-AI-Driven Planning with Structured Priors
-
 This line of work studies how AI-driven autonomous systems learn constraint-consistent behavior through the integration of structured priors within reinforcement learning-based planners.
 
-Rather than encoding safety solely via reward penalties, I investigated how explicit structural information, such as environmental symmetries as geometric heuristics and dynamic movement primitives (DMP) as motion templates, as well as implicit policies derived from human demonstration data, can reduce exploration complexity and bias policy search toward constraint-aware regimes.
+Rather than encoding safety solely via reward penalties, I investigated how explicit structural information as priors can reduce exploration complexity and bias policy search toward constraint-aware regimes. Three types of priors considered and verified:
+
+- **Dynamic Movement Primitives (DMP) as motion templates**:
+
+- **Implicit policies derived from human demonstration data**:
+
+- **Environmental symmetries as geometric heuristics**:
 
 Empirical results in robotic obstacle-avoidance tasks demonstrate accelerated convergence and reduced policy variance. More importantly, the study reveals a structural limitation: even with structured priors, learned policies remain stochastic and statistically reliable. They are still difficult to characterize analytically or certify at the trajectory level.
 

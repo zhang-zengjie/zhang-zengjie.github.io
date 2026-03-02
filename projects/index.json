@@ -1,32 +1,37 @@
 [
   {
-    "id": "intent-aware-control",
-    "title": "Structured Intent Uncertainty for Risk-Aware Control",
-    "date": "2023-2024",
-    "file": "projects/intent-aware-control.md",
-    "links": {
-      "code": "https://github.com/yourname/intent-aware-control",
-      "demo": "https://your-demo-link.com",
-      "paper": "https://arxiv.org/abs/xxxx.xxxxx"
-    }
+    "id": "risk-aware-control",
+    "title": "Risk-Aware Control as a Specification-Grounded Design Philosophy",
+    "date": "2023 - 2024",
+    "file": "projects/risk-aware-control.md"
   },
   {
-    "id": "multi-agent-control",
-    "title": "Risk-Aware Control for Multi-Agent Systems",
-    "date": "2025",
-    "file": "projects/multi-agent-control.md",
-    "links": {
-      "code": "https://github.com/yourname/multi-agent-control",
-      "paper": "https://arxiv.org/abs/xxxx.xxxxx"
-    }
-  },
-  {
-    "id": "specification-benchmark",
-    "title": "AI-Driven Planning with Structured Priors",
-    "date": "2021 - 2022",
-    "file": "projects/learning-based.md",
+    "id": "digital-twin-validation",
+    "title": "Digital-Twin Validation as Scalable Verification Infrastructure",
+    "date": "2021 - 2024",
+    "file": "projects/digital-twin.md",
     "links": {
       "status": "In Development · Proprietary Implementation"
     }
+  },
+  {
+    "id": "ai-driven-planning",
+    "title": "AI-Driven Planning as Cognitive Integration Layer",
+    "date": "2021 - 2022",
+    "file": "projects/learning-based.md"
+  },
+  {
+    "id": "invariance-based-safety",
+    "title": "Invariance-Based Safety as a Deterministic Foundation",
+    "date": "2019 - 2020",
+    "file": "projects/invariance.md"
+  },
+  {
+    "id": "information-reconstruction",
+    "title": "Information Reconstruction as Structural Signal Engineering",
+    "date": "2015 - 2019",
+    "file": "projects/reconstruction.md"
   }
 ]
+
+
