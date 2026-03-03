@@ -32,6 +32,10 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--accent);
 }
 
+h2 {
+  margin: 40px 0px 10px 0px;
+}
+
 p {
   margin: 0 0 0.5em 0;
   text-align: justify;
@@ -199,13 +203,14 @@ article code {
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 0px;
+  margin-top: 0px;
   border-bottom: 1px solid #8b6b3e;
   padding-bottom: 4px;
 }
 
 .project {
   position: relative;
-  margin-bottom: 40px;
+  margin-bottom: 5px;
   padding: 20px 0;
   border-bottom: 1px solid var(--border);
 }
@@ -247,8 +252,8 @@ article code {
   font-size: 1.1rem;  /* 保持与正文一致 */
   line-height: 1.4;
   color: #444;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   max-width: 800px;
   text-align: justify;
   text-justify: inter-word;
@@ -257,7 +262,7 @@ article code {
 /* 展开/收起按钮样式 */
 .toggle-button {
   display: inline-block;
-  margin: 8px 0 12px 0;
+  margin: 0px 0 0px 0;
   color: var(--accent);
   background: none;
   border: none;
@@ -273,7 +278,7 @@ article code {
 
 /* 项目链接样式 */
 .project-links {
-  margin-top: 8px;
+  margin-top: 0px;
   margin-bottom: 0;
   padding: 0;
 }

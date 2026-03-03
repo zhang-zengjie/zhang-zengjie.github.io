@@ -1,35 +1,32 @@
 [
   {
     "id": "risk-aware-control",
-    "title": "Risk-Aware Control as a Specification-Grounded Design Philosophy",
+    "title": "Risk-Aware Control as a Correct-by-Design Philosophy (2023 - 2024)",
     "date": "2023 - 2024",
     "file": "projects/risk-aware-control.md"
   },
   {
     "id": "digital-twin-validation",
-    "title": "Digital-Twin Validation as Scalable Verification Infrastructure",
+    "title": "Digital-Twin Validation as Scalable Verification Infrastructure (2021 - 2024)",
     "date": "2021 - 2024",
-    "file": "projects/digital-twin.md",
-    "links": {
-      "status": "In Development · Proprietary Implementation"
-    }
+    "file": "projects/digital-twin.md"
   },
   {
     "id": "ai-driven-planning",
-    "title": "AI-Driven Planning as Cognitive Integration Layer",
+    "title": "AI-Driven Planning as Cognitive Integration Layer (2021 - 2022)",
     "date": "2021 - 2022",
     "file": "projects/learning-based.md"
   },
   {
     "id": "invariance-based-safety",
-    "title": "Invariance-Based Safety as a Deterministic Foundation",
+    "title": "Invariance-Based Safety as a Deterministic Foundation (2019 - 2020)",
     "date": "2019 - 2020",
     "file": "projects/invariance.md"
   },
   {
     "id": "information-reconstruction",
-    "title": "Information Reconstruction as Structural Signal Engineering",
-    "date": "2015 - 2019",
+    "title": "Information Reconstruction as Structural Signal Engineering (2015 - 2018)",
+    "date": "2015 - 2018",
     "file": "projects/reconstruction.md"
   }
 ]
