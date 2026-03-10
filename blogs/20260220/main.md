@@ -63,7 +63,7 @@ At the core of AI-driven scenario generation lies an implicit assumption: that t
 This becomes particularly consequential in the context of SOTIF, where the goal is to progressively reduce the region of unknown unsafe behaviors. A data-driven generator can explore what it has learned to approximate; it cannot, by design alone, ensure systematic pressure on the truly unknown.
 
 <div style="text-align: center;">
-<img src="blogs/20260220/sotif.png" alt="SOTIF" width="300">
+<img src="blogs/20260220/sotif.png" alt="SOTIF" width="700">
 </div>
 
 > *Fig 1. The SOTIF safety matrix from ISO Standard 21448 showcasing scenario categories. The goal is to compress the region 3 by systematically (not just statistically) transferring unknown hazardous scenarios into known ones.*
