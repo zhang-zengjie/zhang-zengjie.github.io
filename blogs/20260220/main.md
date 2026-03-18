@@ -1,7 +1,7 @@
 > Autonomous driving has been “around the corner” for more than a decade.
 > 
 > Yet the gap between impressive demonstrations and provable safety remains stubbornly wide.
-We can generate increasingly realistic behaviors,  but can we explain their limits?
+We can generate increasingly realistic behaviors, but can we explain their limits?
 And more importantly, can we certify whether they are 'realistic'?
 
 Over the past few years, scenario-based testing has become one of the dominant paradigms in the validation and verification of autonomous driving systems and other safety-critical AI-enabled systems. The motivation is straightforward: real-world testing is expensive, slow, and often dangerous, while simulation-based testing allows developers to explore a much larger space of possible system behaviors at a fraction of the cost.
