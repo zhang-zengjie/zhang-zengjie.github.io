@@ -33,6 +33,61 @@ A common implicit assumption in many system designs is that improving perception
 A more precise way to describe this is:
 *the dominant system paradigm assumes a clean separation between perception and decision-making, where semantic correctness at the perception layer is sufficient for downstream reasoning*.
 
+However, this picture is misleading.
+
+Many real-world failures suggest that something more fundamental is missing — not in the fidelity of object detection, but in how situations are structured and interpreted in the context of the environment. In fact, context in traffic is rarely about object labels alone. It is about relationships between objects. 
+
+Thus, what is hidden here is a class of errors that do not manifest as misclassification or missed detection, but as misinterpretation of these relationships. 
+
+
+To illustrate this point, consider several representative incidents that have appeared in public reports over the past decade.
+The specific vehicles, locations, and timelines are intentionally omitted here — the structural issues are what matter.
+
+> **Case 1: Misinterpreting the environment**
+> 
+> During highway operation, an ADAS misclassified a roadside guardrail as part of the sky.
+As a result, the system failed to treat it as a physical obstacle, and the collision avoidance mechanism never triggered.
+
+> **Case 2: Failure at a railway crossing**
+>
+> At a road–rail crossing, an ADAS failed to properly interpret a lowered barrier and an approaching train.
+The human driver intervened just in time, steering away and colliding with a nearby warning sign instead of entering the crossing.
+
+> **Case 3: A pedestrian that wasn't really a pedestrian**
+> 
+> During a filming scenario, a camera operator was crouching in the trunk of a leading vehicle while recording footage of a following car equipped with an Automated Driving System (ADS).
+The perception module detected the camera operator as a pedestrian and triggered automatic emergency braking.
+The abrupt braking caused a collision with a third vehicle approaching from the side.
+
+> **Case 4: A fallen pedestrian**
+>
+> In another case, a pedestrian suddenly fell on the sidewalk near a driveway.
+The Advanced Driver Assistance Systems (ADAS) detected the fallen pedestrian and executed an emergency steering maneuver rather than braking, resulting in a collision with an oncoming vehicle.
+
+---
+
+At first glance, these incidents appear unrelated. The first two seem to involve *recognition failures*.
+The latter two appear to involve *decision-making problems* despite correct detection. But viewed from a different perspective, they share a common underlying issue: **semantic inconsistency**. Specifically,
+in each case, the system failed to reason about the relationships and context within the scene.
+
+* In Case 1, a large patch of "sky" appearing beneath a mountain ridge should violate basic physical expectations of the world.
+* In Case 2, the simultaneous presence of a railway barrier, warning signals, and a large moving object should strongly imply a hazardous situation.
+* In Case 3, the detected "pedestrian" was in fact physically attached to the leading vehicle and should have been interpreted as part of a moving platform rather than an independent road user.
+* In Case 4, recognizing a fallen pedestrian is only the first step; deciding whether braking or steering is safer requires reasoning about the surrounding traffic configuration.
+
+In all four cases, the failure was not merely about *seeing objects*.
+It was about *understanding the scene as a structured system of relationships.*
+
+Yet in many practical system architectures typically organized around modules like **perception** and **planning**, this kind of reasoning often has no clearly defined home. Perception focuses on extracting information from sensor data.
+Planning assumes that the world model it receives is already semantically coherent. The result is thus an uncomfortable situation:
+many engineers can sense that something important is missing, yet the architecture itself provides no obvious place for it.
+
+The problem becomes what might be called **the elephant in the room** — widely sensed, but rarely addressed explicitly.
+
+## Why Perception Alone Cannot Resolve the Problem
+
+To understand why such failures occur, it is useful to examine the structural role that perception plays in modern autonomous driving systems.
+
 This assumption is reflected in a widely adopted pipeline:
 ```
 Sensor Data (e.g., Camera, LiDAR) → Object Detection & Localization → Sensor Fusion & Semantic Scene Representation → Planner
@@ -42,94 +97,6 @@ Within this paradigm, once objects are correctly detected and semantically class
 > Perception extracts the “facts”, and the planner simply acts on them.
 
 From this perspective, most remaining challenges seem to lie in refining edge cases, handling rare events, or improving robustness under noise.
-
-However, this picture is misleading.
-
-Many real-world failures suggest that something more fundamental is missing — not in the fidelity of object detection, but in how situations are structured and interpreted in the context of the environment. In fact, context in traffic is rarely about object labels alone. It is about relationships between objects. 
-
-Thus, what is hidden here is a class of errors that do not manifest as misclassification or missed detection, but as misinterpretation of these relationships. *Right-of-way*, *intent*, *occlusion*, *interaction priority*, *implicit negotiation* — these are not properties of individual objects, but of configurations of the context. 
-
-Such relational properties are not naturally captured by prevailing semantic representations, which are primarily *object-centric* and *attribute-focused*.
-They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy, which evaluate correctness at the level of individual objects rather than structured interactions.
-
-This is exactly where perception accuracy and context awareness become misaligned.
-
-To illustrate this point, consider several representative incidents that have appeared in public reports over the past decade.
-The specific vehicles, locations, and timelines are intentionally omitted here — the structural issues are what matter.
-
-**Case 1 — Misinterpreting the environment**
-
-During highway operation, an assisted-driving system misclassified a roadside guardrail as part of the sky.
-As a result, the system failed to treat it as a physical obstacle, and the collision avoidance mechanism never triggered.
-
-**Case 2 — Failure at a railway crossing**
-
-At a road–rail crossing, an assisted-driving system failed to properly interpret a lowered barrier and an approaching train.
-The human driver intervened just in time, steering away and colliding with a nearby warning sign instead of entering the crossing.
-
-**Case 3 — A pedestrian that wasn't really a pedestrian**
-
-During a filming scenario, a camera operator was crouching in the trunk of a leading vehicle while recording footage of a following car equipped with an assisted-driving system.
-The perception module detected the camera operator as a pedestrian and triggered automatic emergency braking.
-The abrupt braking caused a collision with a third vehicle approaching from the side.
-
-**Case 4 — A fallen pedestrian**
-
-In another case, a pedestrian suddenly fell on the sidewalk near a driveway.
-The assisted-driving system detected the fallen pedestrian and executed an emergency steering maneuver rather than braking, resulting in a collision with an oncoming vehicle.
-
----
-
-At first glance, these incidents appear unrelated.
-
-The first two seem to involve **recognition failures**.
-The latter two appear to involve **decision-making problems** despite correct detection.
-
-But viewed from a different perspective, they share a common underlying issue:
-
-```
-semantic inconsistency
-```
-
-In each case, the system failed to reason about **the relationships and context within the scene**.
-
-* In Case 1, a large patch of "sky" appearing beneath a mountain ridge should violate basic physical expectations of the world.
-* In Case 2, the simultaneous presence of a railway barrier, warning signals, and a large moving object should strongly imply a hazardous situation.
-* In Case 3, the detected "pedestrian" was in fact physically attached to the leading vehicle and should have been interpreted as part of a moving platform rather than an independent road user.
-* In Case 4, recognizing a fallen pedestrian is only the first step; deciding whether braking or steering is safer requires reasoning about the surrounding traffic configuration.
-
-In all four cases, the failure was not merely about **seeing objects**.
-It was about **understanding the scene as a structured system of relationships.**
-
-Yet in many practical system architectures — typically organized around modules such as **perception, localization, and planning** — this kind of reasoning often has no clearly defined home.
-
-Perception focuses on extracting information from sensor data.
-Planning assumes that the world model it receives is already semantically coherent.
-Localization concerns geometric positioning.
-
-The result is an uncomfortable situation:
-many engineers can sense that something important is missing, yet the architecture itself provides no obvious place for it.
-
-The problem becomes what might be called **the elephant in the room** — widely sensed, but rarely addressed explicitly.
-
-
-很好，这一段确实值得**整体重写**，因为它承担着非常关键的作用：
-
-1. **不否定 perception 的进展**
-2. **指出 perception 无法回避的结构性边界**
-3. **把问题自然引向 semantic reasoning / future reasoning**
-
-我按照我们刚才讨论的 revision strategy，给你一个 **完整的 revised Section 2**。整体语气仍然保持：
-
-* 冷静
-* 专家评论
-* 不攻击任何研究方向
-
----
-
-## Why Perception Alone Cannot Resolve the Problem
-
-To understand why such failures occur, it is useful to examine the structural role that perception plays in modern autonomous driving systems.
 
 Most perception pipelines follow a familiar hierarchy:
 
@@ -150,6 +117,15 @@ Perception fundamentally operates on **what is observable in the current scene**
 It extracts structure from sensor data and produces a representation of the world as it appears at the present moment.
 
 However, safe driving depends on something more subtle.
+
+
+*Right-of-way*, *intent*, *occlusion*, *interaction priority*, *implicit negotiation* — these are not properties of individual objects, but of configurations of the context. 
+
+Such relational properties are not naturally captured by prevailing semantic representations, which are primarily *object-centric* and *attribute-focused*.
+They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy, which evaluate correctness at the level of individual objects rather than structured interactions.
+
+This is exactly where perception accuracy and context awareness become misaligned.
+
 
 In real traffic environments, the critical question is rarely just *what objects exist*.
 It is **how those agents might behave next**.
@@ -202,18 +178,6 @@ This leads to a deeper architectural question:
 
 > If perception alone cannot fully resolve the semantic structure of a traffic scene,
 > where in the system should this reasoning actually take place?
-
----
-很好，现在我们进入 **Section 3**。
-这一节非常关键，因为它要完成三件事：
-
-1. **承认学界已经意识到这个问题**（避免显得我们在“发明问题”）
-2. **快速扫描几条研究路线**（perception / prediction / planning）
-3. **抛出真正的问题：semantic reasoning 的系统位置在哪里**
-
-语气仍然保持 **analysis / field diagnosis**，而不是 literature survey。
-
----
 
 ## The Emerging Role of Semantic Reasoning
 
