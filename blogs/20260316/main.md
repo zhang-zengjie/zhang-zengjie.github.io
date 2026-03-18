@@ -35,7 +35,7 @@ A more precise way to describe this is:
 
 However, this picture is misleading.
 
-Many real-world failures suggest that something more fundamental is missing — not in the fidelity of object detection, but in how situations are structured and interpreted in the context of the environment. In fact, context in traffic is rarely about object labels alone. It is about relationships between objects. 
+Many real-world failures suggest that something more fundamental is missing — not in the fidelity of object detection, but in how situations are interpreted within their context. In fact, context in traffic is rarely reducible to object labels alone. Instead, it fundamentally lies in the relationships between objects.
 
 Thus, what is hidden here is a class of errors that do not manifest as misclassification or missed detection, but as misinterpretation of these relationships. 
 
@@ -64,10 +64,9 @@ The abrupt braking caused a collision with a third vehicle approaching from the 
 > In another case, a pedestrian suddenly fell on the sidewalk near a driveway.
 The Advanced Driver Assistance Systems (ADAS) detected the fallen pedestrian and executed an emergency steering maneuver rather than braking, resulting in a collision with an oncoming vehicle.
 
----
 
 At first glance, these incidents appear unrelated. The first two seem to involve *recognition failures*.
-The latter two appear to involve *decision-making problems* despite correct detection. But viewed from a different perspective, they share a common underlying issue: **semantic inconsistency**. Specifically,
+The latter two appear to involve *decision-making problems* despite correct detection. But viewed from a different perspective, they share a common underlying issue: an *inconsistency* in how the scene is interpreted. Specifically,
 in each case, the system failed to reason about the relationships and context within the scene.
 
 * In Case 1, a large patch of "sky" appearing beneath a mountain ridge should violate basic physical expectations of the world.
@@ -86,100 +85,144 @@ The problem becomes what might be called **the elephant in the room** — widely
 
 ## Why Perception Alone Cannot Resolve the Problem
 
-To understand why such failures occur, it is useful to examine the structural role that perception plays in modern autonomous driving systems.
+To understand why such failures persist, we need to examine the structural role that perception plays in modern ADS or ADAS.
 
-This assumption is reflected in a widely adopted pipeline:
-```
-Sensor Data (e.g., Camera, LiDAR) → Object Detection & Localization → Sensor Fusion & Semantic Scene Representation → Planner
-```
-Within this paradigm, once objects are correctly detected and semantically classified, the hardest part of the problem appears to be largely solved. Given the maturity of modern control and planning techniques, the remaining task is often framed as a well-defined optimization problem: *trajectory generation under known constraints*. This creates an appealing division of labor: 
-
-> Perception extracts the “facts”, and the planner simply acts on them.
-
-From this perspective, most remaining challenges seem to lie in refining edge cases, handling rare events, or improving robustness under noise.
-
-Most perception pipelines follow a familiar hierarchy:
+A common design paradigm assumes a clean separation between perception and decision-making: perception is responsible for extracting a semantically correct representation of the environment, while planning operates on top of this representation to compute actions. This paradigm is often abstracted as:
 
 ```
-pixels → features → object categories
+Raw Sensor Data → Object-Level Representation → Semantic Scene Representation → Planner
 ```
 
-Over the past decade, deep learning has dramatically improved the performance of this pipeline.
-Modern perception systems can detect vehicles, pedestrians, traffic lights, and road boundaries with impressive reliability.
-Many systems can also track agents and predict their short-term trajectories with increasing accuracy.
+Within this framework, once objects are correctly detected, localized, and classified, the core difficulty of the problem appears to be largely resolved.
+Given the maturity of modern planning and control techniques, the remaining task is typically framed as a well-defined optimization problem: *trajectory generation under known constraints*.
 
-These advances are essential.
-Without reliable perception, autonomous driving would simply not be possible.
+This leads to an appealing division of labor:
 
-Yet an important limitation remains.
+> Perception extracts the “facts”, and the planner acts on them.
 
-Perception fundamentally operates on **what is observable in the current scene**.
-It extracts structure from sensor data and produces a representation of the world as it appears at the present moment.
+However, this abstraction hides a critical limitation: 
+perception systems fundamentally operate on *observable structure*.
+They transform sensor data into representations of *what is present* in the current scene, including objects, positions, velocities, and sometimes short-term motion patterns.
 
-However, safe driving depends on something more subtle.
+Over the past decade, advances in deep learning have significantly improved the reliability of this process.
+Modern systems can detect and track agents with high accuracy, and even predict their short-term trajectories with impressive performance. These capabilities are essential.
+Without them, autonomous driving would not even be feasible.
+
+Yet they are not sufficient.
+
+Safe driving depends not only on what is observable, but on how the scene is *organized* and *evolves*. *Right-of-way*, *intent*, *occlusion*, *interaction priority*, *implicit negotiation*, ..., these are not properties of individual objects, but of *relationships* and *configurations*.
+
+Such relational properties are not naturally captured by prevailing semantic representations, which are primarily object-centric and attribute-focused.
+They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy.
+
+This creates a fundamental mismatch:
+
+> High perception accuracy does not imply correct understanding of the scene.
+
+---
+
+This limitation becomes more pronounced in multi-agent environments.
+
+In real traffic, the key question is rarely just *what objects exist*, but **how agents may interact and evolve over time**.
+
+A vehicle ahead is not merely an object labeled *car*, but an agent with multiple possible behaviors:
+
+- Yielding
+- Give-Way
+- Negotiating
+- Asserting Priority
+- Making a Commitment
+- ...
+
+Similarly, a pedestrian near the curb may remain stationary or step into the road.
+A vehicle approaching an intersection may yield or proceed aggressively. 
+
+These possibilities cannot be directly observed from a single snapshot.
+They arise from the interaction between agents, their intentions, and the implicit rules governing the environment. Even trajectory prediction models face this challenge:
+they may achieve strong average performance, yet fail to capture the rare but safety-critical behavioral branches.
+
+This leads to a fundamental architectural question:
+
+> If perception alone cannot fully resolve the semantic structure of a traffic scene,
+> where in the system should this reasoning take place?
 
 
-*Right-of-way*, *intent*, *occlusion*, *interaction priority*, *implicit negotiation* — these are not properties of individual objects, but of configurations of the context. 
+## The Emerging Role of Semantic Reasoning
 
-Such relational properties are not naturally captured by prevailing semantic representations, which are primarily *object-centric* and *attribute-focused*.
-They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy, which evaluate correctness at the level of individual objects rather than structured interactions.
+As discussed in the previous section, semantic understanding does not naturally reside within perception or trajectory prediction alone. Even with accurate detection and prediction, the relational structure of a scene often remains unresolved. Then, a natural shift is to implement semantic reasoning in the decision-making layer.
 
-This is exactly where perception accuracy and context awareness become misaligned.
+This shift is not trivial. 
+
+Traditional planning modules are built on a strong implicit assumption: *the perceived world is already semantically resolved*. They operate on detected objects and predicted trajectories as if the environment were already coherent and unambiguous, reducing decision-making to an optimization problem over a known world model.
+
+Thus, to incorporate semantic reasoning, this assumption must be relaxed: *the planner must reason about interpretation, ambiguity, and interaction structure as part of the decision process itself*.
+
+This is not a new idea.
+
+Over the past several years, both academia and industry have increasingly recognized that safe autonomous driving requires more than accurate perception and optimal motion planning alone.
+A growing body of research has begun to explore how systems might reason about *the semantic structure of traffic scenes and the behaviors of other agents*.
+
+Different communities have approached this challenge from complementary directions.
+
+### Neural-Based Methods
+
+In the perception and prediction communities, where *neural-based models* are widely applied, one line of work attempts to infer higher-level behavioral information directly from data.
+
+Research on *behavior prediction*, *intent inference*, and *multimodal trajectory forecasting* aims to model not just what agents are doing, but what they *might do next*.
+Instead of producing a single predicted trajectory, these models generate multiple candidate futures, each representing a different behavioral hypothesis. For example, whether a nearby vehicle might maintain its lane, yield, or initiate a lane change.
+
+In this view, semantic reasoning is treated as an extension of perception:
+*the system learns to map observations to distributions over possible future behaviors, not just trajectories*.
+
+### Symbolic-Based Methods
+
+Meanwhile, the planning and control communities have approached the problem from a different direction leveraging *symbolic reasoning frameworks*.
+
+Methods such as *risk-aware control*, *game-theoretic decision making*, and *contingency planning* attempt to explicitly reason about uncertainty in the future behaviors of other agents. Rather than assuming a single predicted future, these approaches evaluate actions against multiple possible scenarios and consider their associated risks.
+
+Here, semantic reasoning is embedded within the decision-making process itself:
+*the planner actively reasons about interactions, trade-offs, and possible outcomes before committing to an action*.
+
+At a high level, these approaches share a common intuition:
+**safe driving requires structured reasoning about interactions, not just accurate perception of individual objects.**
+
+However, they differ in where this reasoning is placed within the system.
+
+* In neural-based approaches, semantic structure is expected to *emerge implicitly* from data.
+* In symbolic-based approaches, it is *explicitly represented* through rules, objectives, or interaction models.
+
+Each direction comes with its own trade-offs.
+
+Neural-based systems can capture rich statistical regularities, but their internal reasoning processes are often difficult to interpret or verify.
+On the other hand, symbolic-based approaches, offer greater transparency and controllability, but may struggle to scale to the full complexity of real-world environments.
+
+In practice, many modern systems adopt some form of **hybrid architecture**, combining neural perception and prediction with symbolic-based planning and control.
+
+Yet this hybridization introduces another layer of ambiguity: *Where exactly is the boundary between these components*?
+*Who defines the semantic assumptions that govern their interaction*?
+
+These are important questions, but they remain, at their core, technical.
+
+A more fundamental assumption underlies all the approaches discussed so far is that *the semantic structure of a scene is well-defined*, or that there exists a coherent “ground truth” of context which the semantic reasoning module, whether neural-based or symbolic-based, can in principle represent and recover.
+
+But this assumption itself deserves scrutiny:
+
+> What if the semantics of a scene are not fully well-defined in the first place?
+
+If so, the challenge is no longer just how to perform semantic reasoning, but whether the object of that reasoning, the semantic “truth” of the scene itself, is sound or even well-posed.
+
+----
+----
+----
 
 
-In real traffic environments, the critical question is rarely just *what objects exist*.
-It is **how those agents might behave next**.
-
-A vehicle ahead is not merely an object labeled *car*.
-It is an agent with multiple possible behaviors:
-
-```
-maintain lane
-yield
-accelerate
-cut in
-brake suddenly
-```
-
-Similarly, a pedestrian standing near the curb may remain on the sidewalk — or step into the road.
-A vehicle approaching an intersection may slow down — or proceed aggressively.
-
-These possibilities cannot be directly observed from a single sensor snapshot.
-
-Even a highly accurate trajectory predictor faces a similar challenge.
-A model may achieve excellent average prediction accuracy, yet still miss the rare behavioral branches that dominate safety risk.
-
-In other words,
-
-```
-scene semantics ≠ image semantics
-```
-
-Perception systems analyze images and sensor signals.
-But safe driving ultimately requires reasoning about **the evolving relationships among agents and the futures they may generate**.
-
-In practice, planners often operate under an implicit assumption:
+In practice, planning modules often operate under an implicit assumption:
 
 > the perceived world is already semantically resolved.
 
-The planner receives detected objects, estimated states, and sometimes predicted trajectories.
-From there, it computes an optimal action.
+They receive detected objects, estimated states, and sometimes predicted trajectories, and compute an optimal action accordingly.
 
-But real traffic environments are filled with **semantic uncertainty**.
-
-A nearby vehicle may yield — or it may not.
-A pedestrian may remain stationary — or suddenly move into the road.
-Another driver may maintain their lane — or unexpectedly cut in.
-
-These uncertainties are not simply perception errors.
-They arise because the system must reason about **possible futures that are not yet observable**.
-
-This leads to a deeper architectural question:
-
-> If perception alone cannot fully resolve the semantic structure of a traffic scene,
-> where in the system should this reasoning actually take place?
-
-## The Emerging Role of Semantic Reasoning
+However, real-world driving is characterized by **semantic uncertainty** — not just noise in sensing, but ambiguity in interpretation.
 
 The limitations discussed above have not gone unnoticed.
 
@@ -228,18 +271,6 @@ These questions point to a deeper issue that goes beyond the design of individua
 
 They concern the **representation of semantic uncertainty within an intelligent system**.
 
----
-
-很好，这一节 **Section 4** 是整篇文章最有思想密度的一节。
-它的作用不是介绍技术，而是提出你的 **核心洞察**：
-
-> 自动驾驶系统中的关键不确定性 **不是数值不确定性，而是语义分支（logical branching）**。
-
-这一点如果表达得清楚，会让很多做控制、规划、验证的人产生共鸣。
-
-下面是这一节的完整版本。
-
----
 
 ## The Nature of Semantic Uncertainty
 
