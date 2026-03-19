@@ -211,258 +211,180 @@ But this assumption itself deserves scrutiny:
 
 If so, the challenge is no longer just how to perform semantic reasoning, but whether the object of that reasoning, the semantic “truth” of the scene itself, is sound or even well-posed.
 
-----
-----
-----
-
-
-In practice, planning modules often operate under an implicit assumption:
-
-> the perceived world is already semantically resolved.
-
-They receive detected objects, estimated states, and sometimes predicted trajectories, and compute an optimal action accordingly.
-
-However, real-world driving is characterized by **semantic uncertainty** — not just noise in sensing, but ambiguity in interpretation.
-
-The limitations discussed above have not gone unnoticed.
-
-Over the past several years, both academia and industry have increasingly recognized that safe autonomous driving requires more than accurate perception and motion planning.
-A growing body of research has begun to explore how systems might reason about **the semantic structure of traffic scenes and the behaviors of other agents**.
-
-Different communities have approached this challenge from different angles.
-
-In the perception and prediction communities, researchers have attempted to infer higher-level behavioral information directly from data.
-Recent work on **behavior prediction**, **intent inference**, and **multimodal trajectory forecasting** aims to capture the possible future actions of nearby agents.
-
-Instead of predicting a single trajectory, these models generate multiple candidate futures that represent different behavioral hypotheses — for example, whether a nearby vehicle might maintain its lane, yield, or initiate a lane change.
-
-Meanwhile, the planning and control communities have approached the problem from a different direction.
-
-Methods such as **risk-aware planning**, **game-theoretic decision making**, and **contingency planning** attempt to explicitly reason about uncertainty in the future behaviors of other agents.
-In these frameworks, the planner does not assume that the environment will evolve in a single predictable way.
-Instead, it considers multiple possible scenarios and evaluates actions against a range of potential outcomes.
-
-At a high level, these approaches introduce some form of **structured reasoning about future interactions**.
-
-However, they also reveal a deeper architectural question.
-
-If semantic reasoning is necessary for safe driving, **where should it live in the system?**
-
-Should it emerge implicitly from large-scale data-driven perception and prediction models?
-Or should it be represented explicitly within symbolic or model-based planning frameworks?
-
-Each direction comes with its own trade-offs.
-
-Learning-based systems can capture rich statistical patterns from large datasets, but their internal reasoning processes are often difficult to interpret or verify.
-Symbolic or rule-based reasoning structures, on the other hand, are easier to analyze and validate — but they may struggle to scale to the complexity of real-world driving environments.
-
-In practice, many modern systems implicitly adopt some form of **hybrid architecture**, combining neural perception and prediction with model-based planning and control.
-
-But this hybridization introduces another subtle challenge.
-
-Where exactly is the boundary between these components?
-Who defines the semantic assumptions that govern their interaction?
-
-And perhaps most importantly:
-
-> When a system makes a decision, how do we know that the underlying semantic reasoning is actually correct?
-
-These questions point to a deeper issue that goes beyond the design of individual algorithms.
-
-They concern the **representation of semantic uncertainty within an intelligent system**.
-
-
 ## The Nature of Semantic Uncertainty
 
-The discussion so far has assumed that the semantic structure of a scene can, in principle, be identified and reasoned about.
-In practice, however, an even more fundamental challenge remains.
+The discussion so far has implicitly assumed that the semantic structure of a scene, while complex, is ultimately well-defined — that there exists a coherent “ground truth” of context that a sufficiently capable system could, in principle, recover.
 
-Real traffic environments are inherently uncertain.
+But this assumption does not always hold.
 
-But the type of uncertainty involved is not always the one engineers are accustomed to dealing with.
+In real-world traffic, the meaning of a scene is often **not uniquely determined**.
+It depends on partial observations, latent intentions, and interactions that have not yet unfolded. 
+In this sense, semantic ambiguity is not only a limitation of sensing or modeling, but also an inherent property of the environment itself.
 
-In classical machine learning, uncertainty is often discussed in terms of **aleatoric** and **epistemic** uncertainty.
-Aleatoric uncertainty arises from noise and stochastic variation in the data, while epistemic uncertainty reflects incomplete knowledge that may be reduced with additional observations.
+However, traditional frameworks of uncertainty are not designed to capture this phenomenon. 
 
-In control theory and robotics, uncertainty is typically modeled in terms of **parametric variation**:
+In machine learning, uncertainty is commonly categorized as **aleatoric** and **epistemic**.
+Aleatoric uncertainty arises from stochasticity in the data, while epistemic uncertainty reflects incomplete knowledge that may, in principle, be reduced with more information.
 
-```
-noise
-disturbance
-bounded modeling error
-```
+In control and robotics, uncertainty is typically modeled in terms of numerical variation, such as *noise*, *disturbance*, *bounded modeling error*, and etc. These forms of uncertainty are fundamentally *quantitative*,
+assuming that the underlying state of the world is well-defined, even if imperfectly observed.
 
-These forms of uncertainty are numerical in nature.
-They can often be represented using probability distributions, confidence intervals, or bounded sets.
+But semantic uncertainty is different. It does not arise solely from noise or lack of data.
+Instead, it arises because *multiple, qualitatively different interpretations of the same scene may be simultaneously valid*.
 
-Autonomous driving, however, introduces a different layer of uncertainty that is harder to capture within these traditional frameworks.
+Consider a simple situation involving a vehicle ahead. 
+At the current moment, its position and velocity may be estimated with reasonable accuracy.
+Yet its future behavior may branch into multiple possibilities:
 
-Consider a simple situation involving a vehicle ahead.
+- Yielding from the left or from the right, or not yielding at all
+- Making or ignoring a commitment
+- Asserting or giving up priority
+- ...
 
-At the current moment, the vehicle's position and velocity may be estimated with reasonable accuracy.
-But its **future behavior** may branch into multiple qualitatively different possibilities:
+From the perspective of the system, these are not small variations around a single outcome.
+They correspond to *distinct possible futures*, each with different safety implications. This type of uncertainty is therefore not purely numerical, but *structural*. It is not just about *how much* error there is,
+but about *which world* the system is currently in, or might soon enter.
 
-```
-maintain lane
-yield
-accelerate
-cut in
-brake suddenly
-```
+This distinction has important consequences.
 
-From the perspective of the autonomous system, these possibilities represent **different future worlds**, each with different safety implications.
+A planner that optimizes for a single most-likely prediction may perform well in typical scenarios,
+yet still fail catastrophically when reality follows a less probable branch.
 
-This kind of uncertainty is not merely numerical.
-It is **structural**.
+This helps explain a common paradox in autonomous driving:
+systems can achieve strong performance on aggregate metrics — such as total miles driven or average prediction error — while still exhibiting rare but severe failures.
 
-In other words,
+Such metrics reflect performance under common conditions,
+but provide limited insight into whether the system has adequately accounted for **the range of plausible semantic evolutions** of a scene.
 
-```
-uncertainty is logical
-not purely numerical
-```
+From this perspective, the core challenge is not simply dealing with noisy measurements or imperfect models.
 
-A planner that assumes a single most-likely future may perform well in typical scenarios, yet still fail catastrophically when the actual behavior follows a less probable branch.
+It is dealing with **a combinatorial space of possible interactions among agents**,
+where each branch corresponds to a different semantic interpretation of the scene.
 
-This phenomenon helps explain why autonomous driving systems can perform well in large-scale testing while still encountering rare but severe failures.
 
-Metrics such as accumulated driving miles, average prediction error, or scenario coverage can demonstrate robustness under common conditions.
-However, they may provide limited insight into whether the system has adequately considered **the full range of plausible semantic branches** that might occur in the real world.
+## Exposing Semantically Critical Scenarios: A Shift from Data Coverage to Semantic Coverage
 
-From this perspective, the core difficulty of autonomous driving planning is not simply dealing with noisy measurements or imperfect models.
+The dual challenges discussed above — the limitations of system design and the inherent ambiguity of semantic structure — give rise to a fundamental paradox:
 
-It is dealing with **the combinatorial explosion of possible interactions among intelligent agents**.
+In principle, safe behavior requires reasoning over a vast space of possible interactions.
+In practice, however, no system can explicitly represent or enumerate them all.
 
-And this observation leads to a crucial question.
+As a result, what ultimately matters is not only how a system reasons,
+but **which possibilities are ever made visible to it in the first place**.
 
-If safety depends on reasoning over these branching semantic possibilities,
-how do we ensure that the system is actually aware of the right branches in the first place?
+This is where the problem should take a decisive turn.
 
----
+If semantic reasoning cannot be fully resolved at the level of system design alone,
+then **exposing the right semantic configurations becomes a primary task in its own right**.
 
-这一节的几个关键点，你可以检查一下：
-
-### 1️⃣ logical uncertainty 的 framing
-
-核心句是：
-
-```
-uncertainty is logical, not purely numerical
-```
-
-这其实是一个很强的理论观点。
+In this sense, the challenge is no longer purely one of modeling or reasoning.
+It becomes a question of **exposure**:
+which structures are encountered, which interactions are explored, and which scenarios are actually stress-tested.
 
 ---
 
-### 2️⃣ miles / coverage 的 critique
+In current industrial practice, this problem is often framed under a familiar umbrella:
 
-这里我们已经 **自然地嵌入了你想说的 industry 痛点**：
+> *the long-tail problem*
 
-* miles driven
-* prediction accuracy
-* coverage
+Rare events, corner cases, edge scenarios — these terms are widely used to describe situations where autonomous systems tend to fail.
 
-但没有攻击任何公司或方法。
+However, this framing is fundamentally insufficient.
+
+It treats such cases as statistical outliers,
+rather than as manifestations of **missing semantic structure**.
+
+A rare event is not necessarily just unlikely.
+It may be **systematically absent** from the system’s representation, training process, or evaluation pipeline.
 
 ---
 
-### 3️⃣ 最后的过渡
+This distinction matters.
 
-最后一句：
+If a scenario is merely rare, more data may eventually capture it.
+But if a semantic configuration is never explicitly constructed or tested,
+it remains invisible — regardless of how much data is collected.
 
-> how do we ensure that the system is actually aware of the right branches?
-
-正好引出 **Section 5（整篇文章的 punchline）**：
-
-```
-missing contingency
-= safety blind spot
-```
-
-也就是你那句非常强的话：
+In this sense:
 
 ```
-If a contingency is missing,
-the planner will never reason about it.
+long-tail ≠ root cause  
+semantic omission = root cause
 ```
 
 ---
 
-很好，这一节确实是**整篇文章的高潮**。
-前面几节已经完成了铺垫：
+From a testing and validation perspective, this leads to a different objective.
 
-1. **industry failures**
-2. **perception 的结构边界**
-3. **semantic reasoning 的系统位置问题**
-4. **semantic uncertainty = logical branching**
+The goal is no longer just to accumulate miles or improve average-case performance.
+It is to **actively identify and construct scenarios that expose missing semantic relationships**.
 
-现在这一节要给出 **核心 punchline**：
+The cases discussed earlier in this article are not just isolated failures.
+They are examples of such gaps:
 
-> **如果某个 contingency 没有被建模，系统就永远不会推理它。**
-
-同时还要做到两点：
-
-* 不显得在 **推销 solution**
-* 但让懂的人自然意识到 **specification / scenario construction 的重要性**
-
-下面是这一节的完整版本。
+* relationships that were not properly represented
+* interactions that were not adequately considered
+* interpretations that were never made explicit
 
 ---
 
-## The Critical Question: Who Defines the Semantic World?
+This suggests a shift from **data coverage** to **semantic coverage**.
 
-The discussion so far reveals a deeper issue that is rarely addressed directly.
+Instead of asking:
 
-If safe autonomous driving requires reasoning over multiple semantic possibilities, then an essential question arises:
+> Have we seen enough data?
 
-**Where do these possibilities come from in the first place?**
+we must ask:
 
-In other words, who defines the **semantic structure of the world** that the system reasons about?
-
-For an autonomous driving system, this question manifests in a very concrete form.
-
-The planner can only reason about the contingencies that exist within its internal representation of the environment.
-If a particular possibility is absent from that representation, the system will never consider it — no matter how sophisticated the planning algorithm may be.
-
-Put differently:
-
-> **If a contingency is missing, the planner will never reason about it.**
-
-This observation has an important implication.
-
-```
-scenario omission = safety blind spot
-```
-
-A system may perform well across a wide range of test cases and still contain critical blind spots — simply because certain semantic situations were never explicitly considered during design, modeling, or evaluation.
-
-Unlike many physical quantities in engineering, semantic structure is not something that can be directly measured from the environment.
-
-Sensor noise can be quantified.
-Model parameters can be estimated.
-Prediction uncertainty can be approximated statistically.
-
-But **semantic meaning** is different.
-
-What counts as a relevant situation — a potential hazard, a meaningful interaction, a safety-critical contingency — ultimately depends on how the system interprets the world and what objectives it is designed to pursue.
-
-This makes semantic uncertainty fundamentally difficult to quantify.
-
-One might hope that large-scale data alone could reveal the full structure of the driving world.
-However, this assumption faces an inherent limitation: rare but safety-critical events may occur so infrequently that they remain effectively invisible within even very large datasets.
-
-This challenge helps explain why purely end-to-end approaches often struggle to provide clear safety guarantees.
-
-Without explicit boundaries that define which semantic contingencies must be considered, it becomes difficult to determine whether the system's reasoning actually covers the situations that matter most.
-
-As a result, the central difficulty may not lie solely in improving perception, prediction, or planning algorithms.
-
-It may lie in a more foundational task:
-
-**determining what semantic possibilities the system must be able to reason about in the first place.**
-
-And once those possibilities are defined, another equally difficult question emerges:
-
-How do we ensure that they are adequately represented, tested, and validated within the overall system?
+> Have we exposed the right structures?
 
 ---
+
+In this view, testing is no longer a downstream verification step.
+It becomes a primary mechanism for **making semantic uncertainty visible**.
+
+By systematically constructing and exploring edge-case interactions,
+testing can reveal not only where the system fails,
+but **which parts of the semantic space it has never truly understood**.
+
+
+## Is It All About Awareness?
+
+From this perspective, the issue is not merely one of improving perception, prediction, or planning in isolation.
+Nor is it simply a matter of incorporating more sophisticated cases into the system.
+
+What emerges instead is a more subtle observation:
+
+**semantic reasoning is not just a technical paradigm to be grounded, but also a notion — a symbolic anchor for a wide class of structural unknowns in interactive environments that current system abstractions do not fully capture.**
+
+It points to aspects of the environment that are neither purely perceptual nor purely decision-theoretic,
+but arise from the organization of interactions, constraints, and latent possibilities.
+
+In this sense, what we often refer to as “reasoning” is less a specific capability,
+but more an attempt to engage with a layer of structure that remains only partially articulated.
+
+This makes many familiar questions more delicate than they first appear.
+
+For example, it is widely recognized that enumerating test cases or accumulating driving miles is insufficient to guarantee safety.
+Yet what is less often examined is that scenarios treated as comparable “cases” may differ fundamentally in their underlying semantic complexity.
+
+Without access to the structure beneath them,
+these differences remain hidden, but instead compressed into aggregate statistics, or absorbed into a long-tail distribution that obscures their true nature.
+
+What appears as a sparse set of rare events may, in fact, reflect a much richer and largely unexplored space of semantic variation.
+
+From this perspective, identifying the role of semantic reasoning is not a conclusion, but an opening. 
+
+As suggested earlier, the distinction between perception accuracy and context awareness was never a clean separation to begin with.
+It is part of a broader continuum that spans perception, prediction, planning, and ultimately testing and validation.
+
+It reveals that beneath the observable performance of a system lies a deeper layer of structure — one that cannot be attributed to any single module, and instead emerges from the interplay between multiple subsystems and the integration of insights across different disciplines.
+
+Seen in this light, the so-called “hidden gap” is not confined to a specific component.
+It reflects a limitation in how the problem itself is currently framed.
+
+More precisely, it points to a missing level of abstraction — one that lies between individual system components and the real-world phenomena they are meant to capture.
+Without a shared understanding at this level, improvements within isolated modules risk becoming locally optimal, while the underlying structural gaps remain unaddressed.
+
+Addressing this challenge is therefore not a matter of advancing a single technique or domain.
+It requires a more coordinated view — a way for different parts of the system, and the communities that build them, to reason about the same underlying structure with a shared language and aligned assumptions.
