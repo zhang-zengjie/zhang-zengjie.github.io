@@ -15,13 +15,9 @@ The former measures whether the system sees correctly, while the latter concerns
 Here, *context* refers to the relational structure of a scene, i.e., how relevant objects relate to each other, what constraints these relationships impose, and what behaviors they enable or prohibit. 
 A system may detect objects with high precision, yet still fail to interpret what those objects mean in context.
 
-In other words:
+In other words: *seeing correctly does not necessarily imply understanding correctly*.
 
-
-> Seeing correctly does not necessarily imply understanding correctly.
-
-
-Perception accuracy is therefore not a sufficient condition for correct contextual understanding.
+> Perception accuracy is therefore not a sufficient condition for correct contextual understanding.
 
 Crucially, this gap is often invisible in standard evaluation pipelines. Aggregate metrics such as *mean Average Precision (mAP)* or *prediction accuracy* implicitly assume that correctness at the level of individual objects composes into correctness at the system level.
 
@@ -43,30 +39,30 @@ Thus, what is hidden here is a class of errors that do not manifest as misclassi
 To illustrate this point, consider several representative incidents that have appeared in public reports over the past decade.
 The specific vehicles, locations, and timelines are intentionally omitted here — the structural issues are what matter.
 
-> **Case 1: Misinterpreting the environment**
+> **Case 1: misinterpreting the environment**
 > 
-> During highway operation, an ADAS misclassified a roadside guardrail as part of the sky.
+> During highway operation, an Advanced Driver Assistance Systems (ADAS) misclassified a roadside guardrail as part of the sky.
 As a result, the system failed to treat it as a physical obstacle, and the collision avoidance mechanism never triggered.
 
-> **Case 2: Failure at a railway crossing**
+> **Case 2: failure at a railway crossing**
 >
 > At a road–rail crossing, an ADAS failed to properly interpret a lowered barrier and an approaching train.
 The human driver intervened just in time, steering away and colliding with a nearby warning sign instead of entering the crossing.
 
-> **Case 3: A pedestrian that wasn't really a pedestrian**
+> **Case 3: a pedestrian that wasn't really a pedestrian**
 > 
 > During a filming scenario, a camera operator was crouching in the trunk of a leading vehicle while recording footage of a following car equipped with an Automated Driving System (ADS).
 The perception module detected the camera operator as a pedestrian and triggered automatic emergency braking.
 The abrupt braking caused a collision with a third vehicle approaching from the side.
 
-> **Case 4: A fallen pedestrian**
+> **Case 4: a fallen pedestrian**
 >
 > In another case, a pedestrian suddenly fell on the sidewalk near a driveway.
-The Advanced Driver Assistance Systems (ADAS) detected the fallen pedestrian and executed an emergency steering maneuver rather than braking, resulting in a collision with an oncoming vehicle.
+The ADAS detected the fallen pedestrian and executed an emergency steering maneuver rather than braking, resulting in a collision with an oncoming vehicle.
 
 
 At first glance, these incidents appear unrelated. The first two seem to involve *recognition failures*.
-The latter two appear to involve *decision-making problems* despite correct detection. But viewed from a different perspective, they share a common underlying issue: an *inconsistency* in how the scene is interpreted. Specifically,
+The latter two appear to involve *decision-making problems* despite correct detection. But viewed from a different perspective, they share a common underlying issue: an *inconsistency* in how the scene should be interpreted. Specifically,
 in each case, the system failed to reason about the relationships and context within the scene.
 
 * In Case 1, a large patch of "sky" appearing beneath a mountain ridge should violate basic physical expectations of the world.
@@ -77,11 +73,10 @@ in each case, the system failed to reason about the relationships and context wi
 In all four cases, the failure was not merely about *seeing objects*.
 It was about *understanding the scene as a structured system of relationships.*
 
-Yet in many practical system architectures typically organized around modules like **perception** and **planning**, this kind of reasoning often has no clearly defined home. Perception focuses on extracting information from sensor data.
-Planning assumes that the world model it receives is already semantically coherent. The result is thus an uncomfortable situation:
+Yet in many practical system architectures typically organized around modules like **perception** and **planning**, this kind of **awareness** often has no clearly defined home. Perception focuses on extracting information from sensor data, while planning assumes that the world model it receives is already semantically coherent. The result is thus an uncomfortable situation:
 many engineers can sense that something important is missing, yet the architecture itself provides no obvious place for it.
 
-The problem becomes what might be called **the elephant in the room** — widely sensed, but rarely addressed explicitly.
+The problem becomes what might be called ***the elephant in the room*** — widely sensed, but rarely addressed explicitly.
 
 ## Why Perception Alone Cannot Resolve the Problem
 
@@ -94,23 +89,22 @@ Raw Sensor Data → Object-Level Representation → Semantic Scene Representatio
 ```
 
 Within this framework, once objects are correctly detected, localized, and classified, the core difficulty of the problem appears to be largely resolved.
-Given the maturity of modern planning and control techniques, the remaining task is typically framed as a well-defined optimization problem: *trajectory generation under known constraints*.
-
+Given the maturity of modern planning and control techniques, the remaining task is typically framed as a well-defined optimization problem: *trajectory generation under known constraints*. 
 This leads to an appealing division of labor:
 
 > Perception extracts the “facts”, and the planner acts on them.
 
 However, this abstraction hides a critical limitation: 
 perception systems fundamentally operate on *observable structure*.
-They transform sensor data into representations of *what is present* in the current scene, including objects, positions, velocities, and sometimes short-term motion patterns.
+They transform sensor data into representations of *what is present* in the current scene, including  *whch objects are there*, *what are they*, and *where they are (up to)*.
 
 Over the past decade, advances in deep learning have significantly improved the reliability of this process.
 Modern systems can detect and track agents with high accuracy, and even predict their short-term trajectories with impressive performance. These capabilities are essential.
 Without them, autonomous driving would not even be feasible.
 
-Yet they are not sufficient.
+Yet they are far from sufficient.
 
-Safe driving depends not only on what is observable, but on how the scene is *organized* and *evolves*. *Right-of-way*, *intent*, *occlusion*, *interaction priority*, *implicit negotiation*, ..., these are not properties of individual objects, but of *relationships* and *configurations*.
+Safe driving depends not only on what is observable, but on how the scene is *organized* and *evolves*. *Priority*, *intent*, *occlusion*, *interaction commitment*, *implicit negotiation*, ..., these are not properties of individual objects, but of *relationships* and *configurations*.
 
 Such relational properties are not naturally captured by prevailing semantic representations, which are primarily object-centric and attribute-focused.
 They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy.
@@ -119,32 +113,31 @@ This creates a fundamental mismatch:
 
 > High perception accuracy does not imply correct understanding of the scene.
 
----
+This limitation becomes more pronounced in multi-agent environments, a simplified reflection of real traffic, where the key question is rarely just *what objects exist*, but **how interactions may unfold over time**.
 
-This limitation becomes more pronounced in multi-agent environments.
+Crucially, this is not merely a matter of uncertainty in a probabilistic sense.
+What matters is not just *how likely* a future is, but *how many qualitatively different ways* a situation can evolve — each corresponding to a distinct interaction structure.
 
-In real traffic, the key question is rarely just *what objects exist*, but **how agents may interact and evolve over time**.
+Consider a pedestrian near the curb.
+At a given moment, the scene may appear static. Yet the situation is inherently *branched*: the pedestrian may remain on the sidewalk or step into the road — two qualitatively different evolutions of the scene, rather than small variations of the same outcome.
 
-A vehicle ahead is not merely an object labeled *car*, but an agent with multiple possible behaviors:
+Now consider a vehicle ahead.
+It is not merely an object labeled *car*, but an agent embedded in an interaction:
 
-- Yielding
-- Give-Way
-- Negotiating
-- Asserting Priority
-- Making a Commitment
-- ...
+* yielding
+* giving way
+* negotiating
+* committing to a maneuver
+* asserting priority
 
-Similarly, a pedestrian near the curb may remain stationary or step into the road.
-A vehicle approaching an intersection may yield or proceed aggressively. 
+These are not just variations in motion, but **structured behavioral modes**, defined by the relationships between agents and the implicit rules governing the environment.
 
-These possibilities cannot be directly observed from a single snapshot.
-They arise from the interaction between agents, their intentions, and the implicit rules governing the environment. Even trajectory prediction models face this challenge:
-they may achieve strong average performance, yet fail to capture the rare but safety-critical behavioral branches.
+Such structure cannot be recovered from a single snapshot, nor inferred purely as a distribution over trajectories.
+It emerges from reasoning about interactions, intentions, and constraints across agents.
 
-This leads to a fundamental architectural question:
+This is exactly where the limitation lies.
+Even trajectory prediction models may achieve strong average performance, yet still fail to capture the **branching structure of behavior** — especially in rare but safety-critical situations.
 
-> If perception alone cannot fully resolve the semantic structure of a traffic scene,
-> where in the system should this reasoning take place?
 
 
 ## The Emerging Role of Semantic Reasoning
