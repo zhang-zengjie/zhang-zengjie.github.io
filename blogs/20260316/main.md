@@ -323,6 +323,10 @@ which emphasizes the systematic identification and reduction of unknown hazardou
 
 From this viewpoint, semantic coverage can be understood as a more structural lens on the same problem: **not only expanding the space of tested situations, but making explicit the underlying configurations and assumptions that give rise to potential hazards**.
 
+<div style="text-align: center;">
+<img src="blogs/20260316/variation.png" alt="SOTIF" width="640">
+</div>
+
 In this view, testing is no longer a downstream verification step. It becomes a primary mechanism for *making semantic uncertainty visible*.
 
 By systematically constructing and exploring *semantic-critical scenarios*, testing can reveal not only where the system fails, but *which parts of the semantic space it has never truly understood*.
