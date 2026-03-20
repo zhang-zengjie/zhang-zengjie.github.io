@@ -13,16 +13,35 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 </head>
 <body>
-  <div class="container">
+<div class="container">
     <header>
       <div class="name">Zengjie Zhang</div>
       <nav class="nav">
-        <a href="home.html" class="active">Home</a>
+        <a href="index.html" class="active">Home</a>
         <a href="blogs.html">Blogs</a>
       </nav>
     </header>
-
-    <section class="section-block">
+    
+    <!-- 两列布局容器 -->
+    <div class="content-with-sidebar">
+      <!-- 左侧边栏 -->
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <!-- <div class="sidebar-title">Connect</div> -->
+          <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
+        <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="light" data-type="HORIZONTAL" data-vanity="zengjie-zhang" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://nl.linkedin.com/in/zengjie-zhang?trk=profile-badge">CONNECT</a></div>
+        </div>
+        
+        <!-- 可选：添加其他侧边栏内容 -->
+        <!-- <div class="sidebar-section">
+          <div class="sidebar-title">Contact</div>
+          <p>Email: zengjie@azonai.co</p>
+        </div> -->
+      </aside>
+      
+      <!-- 右侧主要内容区域 -->
+      <main class="main-content">
+        <section class="section-block">
       <h2>About</h2>
       <p>
         I work on risk-aware verification and control of safety-critical autonomous systems, focusing on understanding and formalizing their safety and performance boundaries under uncertainty.
@@ -78,13 +97,15 @@
     <section>
       <h2>Recent Writing</h2>
       <ul class="blog-list">
+        <li><a href="blogs.html?id=20260316">High Accuracy, Low Understanding: The Hidden Gap in Autonomous Driving Safety</a></li>
         <li><a href="blogs.html?id=20260220">Beyond Scenarios: Why AI-Driven Scenario Testing Is Incomplete Without Formal Methods</a></li>
       </ul>
-    </section>
-
-    <footer>
+     </section>
+     <footer>
       © Zengjie Zhang · Personal Portfolio · <a href="mailto:zengjie@azonai.co">Contact</a>
     </footer>
+      </main>
+    </div>
   </div>
 
   <!-- 脚本加载 -->
@@ -102,7 +123,5 @@
       projectLoader.loadAndRenderAllProjects();
     });
   </script>
-  <script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
-  <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="medium" data-theme="light" data-type="HORIZONTAL" data-vanity="zengjie-zhang" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://nl.linkedin.com/in/zengjie-zhang?trk=profile-badge">Zengjie Zhang</a></div>
 </body>
 </html>

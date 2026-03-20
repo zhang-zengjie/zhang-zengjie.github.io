@@ -18,9 +18,8 @@ In simpler terms:
 
 > *Seeing correctly does not necessarily imply understanding correctly*.
 
-
 <div style="text-align: center;">
-<img src="blogs/20260316/figure.png" alt="SOTIF" width="700">
+<img src="blogs/20260316/figure.png" alt="SOTIF" width="640">
 </div>
 
 Crucially, this gap is often invisible in standard evaluation pipelines. Aggregate metrics such as *mean Average Precision (mAP)* or *prediction accuracy* implicitly assume that correctness at the level of individual objects composes into correctness at the system level.
@@ -87,8 +86,11 @@ To understand why such failures persist, we need to examine the structural role 
 
 A common design paradigm assumes a clean separation between perception and decision-making: perception is responsible for extracting a semantically correct representation of the environment, while planning operates on top of this representation to compute actions. This paradigm is often abstracted as:
 
-```
-Raw Sensor Data → Object-Level Representation → Semantic Scene Representation → Planner
+```mermaid
+graph LR
+    A[Sensors] -->|Raw Sensor<br>Data| B[Detection and<br>Classification]
+    B -->|Object-Level<br>Representation| C[Semantic<br>Segmentation]
+    C -->|Semantic Scene<br>Representation| D[Planner]
 ```
 
 Within this framework, once objects are correctly detected, localized, and classified, the core difficulty of the problem appears to be largely resolved.
@@ -392,16 +394,9 @@ It requires a more coordinated view — a way for different parts of the system,
 ## References
 
 1. M. Teichmann, M. Weber, M. Zoellner, R. Cipolla, and R. Urtasun. (2018). *MultiNet: Real-time Joint Semantic Reasoning for Autonomous Driving*. arXiv:1612.07695, https://arxiv.org/abs/1612.07695.
-
 2. M. Diao, L. Yang, H. Yin, Z. Wang, Y. Wang, D. Tian, K. Liang, and Z. Ma. (2026). *DriveRX: A Vision-Language Reasoning Model for Cross-Task Autonomous Driving*. arXiv: 2505.20665，https://arxiv.org/abs/2505.20665.
-
 3. J. Wang, Y. Jin, H. Taghavifar, F. Ding, and C. Wei. (2025). *Socially-Aware Autonomous Driving: Inferring Yielding Intentions for Safer Interactions*. arXiv:2504.20004, https://arxiv.org/abs/2504.20004.
-
-
 4. L. Zhang, Y. Yuan, C. Wu, X. Chang, X. Cai, S. Zeng, L. Shi, S. Wang, H. Zhang, and M. Xu. (2026). *MindDriver: Introducing Progressive Multimodal Reasoning for Autonomous Driving*. arXiv: 2602.21952, https://arxiv.org/abs/2602.21952.
-
 5. S. Qi, Z. Zhang, Z. Sun, and S. Haesaert. (2026). *Risk-Aware Autonomous Driving with Linear Temporal Logic Specifications*. arXiv:2409.09769，https://arxiv.org/abs/2409.09769.
-
 6. L. Zhang, S. Han, and S. Grammatico. (2025). *Automated Lane Merging via Game Theory and Branch Model Predictive Control*. arXiv:2311.14916, https://arxiv.org/abs/2311.14916.
-
 7. L. Zheng, L. Zhang, P. Yu, Y. Sun, S. Grammatico, J. Ma, and C. Liu. (2026). *Contingency Planning for Safety-Critical Autonomous Vehicles: A Review and Perspectives*. arXiv:2601.14880, https://arxiv.org/abs/2601.14880.

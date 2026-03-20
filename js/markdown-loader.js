@@ -6,6 +6,7 @@ class MarkdownLoader {
     this.indexUrl = config.indexUrl || 'index.json';
     this.contentType = config.contentType || 'blog';
     this.enableMath = config.enableMath !== false; // 默认启用数学公式
+    this.enableMermaid = config.enableMermaid !== false; // 默认启用 Mermaid
     
     // 绑定方法
     this.init = this.init.bind(this);
@@ -14,6 +15,7 @@ class MarkdownLoader {
     this.renderList = this.renderList.bind(this);
     this.renderContent = this.renderContent.bind(this);
     this.renderMath = this.renderMath.bind(this);
+    this.renderMermaid = this.renderMermaid.bind(this);
   }
 
   // 新增：渲染数学公式的方法
@@ -33,6 +35,39 @@ class MarkdownLoader {
       });
     } catch (error) {
       console.warn('Math rendering error:', error);
+    }
+  }
+
+  // 新增：渲染 Mermaid 图表的方法
+  renderMermaid(element) {
+    if (!this.enableMermaid || typeof mermaid === 'undefined') return;
+    
+    try {
+      // 查找所有 Mermaid 代码块
+      const mermaidBlocks = element.querySelectorAll('pre code.language-mermaid');
+      
+      mermaidBlocks.forEach(codeBlock => {
+        const pre = codeBlock.parentElement;
+        if (pre && pre.tagName === 'PRE') {
+          // 创建新的 div 替换原来的 pre
+          const mermaidDiv = document.createElement('div');
+          mermaidDiv.className = 'mermaid';
+          mermaidDiv.textContent = codeBlock.textContent;
+          pre.parentNode.replaceChild(mermaidDiv, pre);
+        }
+      });
+      
+      // 渲染所有 mermaid 图表
+      const mermaidElements = element.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0 && typeof mermaid !== 'undefined') {
+        mermaid.run({
+          querySelector: '.mermaid',
+          nodes: mermaidElements,
+          suppressErrors: true
+        }).catch(err => console.warn('Mermaid rendering error:', err));
+      }
+    } catch (error) {
+      console.warn('Mermaid rendering error:', error);
     }
   }
 
@@ -96,10 +131,13 @@ class MarkdownLoader {
       </div>
     `;
     
-    // 2. 再渲染数学公式（关键步骤）
+    // 2. 渲染数学公式
     const articleContent = contentEl.querySelector('.article-content');
     if (articleContent) {
       this.renderMath(articleContent);
+      
+      // 3. 渲染 Mermaid 图表（在数学公式之后）
+      this.renderMermaid(articleContent);
     }
   }
 

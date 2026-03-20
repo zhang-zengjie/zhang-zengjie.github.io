@@ -55,10 +55,53 @@ a:hover {
    Layout
 ========================= */
 
+
 .container {
-  max-width: 720px;
+  max-width: 1200px;  /* 改为 1200px 以容纳两列布局 */
   padding: 64px 24px 96px;
   margin: 0 auto;
+}
+
+.blog-container {
+  max-width: 720px;  /* 改为 1200px 以容纳两列布局 */
+  padding: 64px 24px 96px;
+  margin: 0 auto;
+}
+
+/* 保持主内容区域的阅读宽度，提升可读性 */
+.main-content {
+  max-width: 720px;  /* 限制主内容宽度，保持原有阅读体验 */
+}
+
+/* 调整响应式断点 */
+@media (max-width: 900px) {
+  .container {
+    max-width: 100%;
+    padding: 48px 16px;
+  }
+  
+  .content-with-sidebar {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    flex: 0 0 auto;
+    margin-bottom: 1.5rem;
+  }
+  
+  .main-content {
+    max-width: 100%;  /* 移动端取消宽度限制 */
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  nav a {
+    margin-left: 0;
+  }
 }
 
 header {
@@ -168,27 +211,6 @@ article code {
 
 .article-content h3 {
   margin-top: 0.6em;
-}
-
-/* =========================
-   Responsive
-========================= */
-
-@media (max-width: 768px) {
-  .container {
-    max-width: 100%;
-    padding: 48px 16px;
-  }
-
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  nav a {
-    margin-left: 0;
-  }
 }
 
 /* =========================
@@ -315,4 +337,54 @@ article code {
 
 .nav {
   font-size: 1.2rem;
+}
+
+/* 添加两列布局样式 */
+.content-with-sidebar {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.sidebar {
+  flex: 0 0 280px; /* 固定宽度 280px */
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0; /* 防止内容溢出 */
+}
+
+/* 移动端适配：在小屏幕上改为单列布局 */
+@media (max-width: 768px) {
+  .content-with-sidebar {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    flex: 0 0 auto;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* 调整 LinkedIn Badge 样式，使其更适合侧边栏 */
+.sidebar .badge-base {
+  width: 100% !important;
+}
+
+/* 可选：添加一些间距和视觉效果 */
+.sidebar-section {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
