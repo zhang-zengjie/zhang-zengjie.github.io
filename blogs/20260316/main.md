@@ -1,6 +1,4 @@
-# High Perception Accuracy, Low Context Awareness: The Hidden Gap in Autonomous Driving Safety
-
-> Perception is often seen as a central bottleneck in autonomous driving. However, if perception were perfect, would autonomous driving then be safe? Despite increasingly accurate detection and prediction, systems still fail in ways that are difficult to anticipate. There appears to be a persistent but hidden gap, one that is not yet captured by standard notions of accuracy. What exactly is missing? And more importantly, how can we make it visible?
+> Perception accuracy is often treated as a key indicator of safety in autonomous driving. However, if perception were perfect, would autonomous driving then be safe? Despite increasingly accurate detection and prediction, systems still fail in ways that are difficult to anticipate. There appears to be a persistent but hidden gap, one that is not yet captured by standard notions of accuracy. What exactly is missing? And more importantly, how can we make it visible?
 
 Modern autonomous driving systems have made remarkable progress in perception. Benchmarks continue to report near-saturated performance on object detection, segmentation, and tracking. Yet, high-profile failures and long-tail incidents persist — not as outliers in noise, but as indicators of a deeper structural issue.
 
@@ -8,16 +6,22 @@ A fundamental question is then raised:
 
 > If systems can already “see” the world with high accuracy, why do they still fail to behave safely within it?
 
+At the heart of this question lies a subtle but critical distinction: the relationship between **perception** and **understanding**.  
+The former concerns whether the system sees precisely, while the latter concerns whether it interprets the situation correctly.
 
-At the heart of this question lies a subtle but critical distinction: the relationship between **perception accuracy** and **context awareness**.
-The former measures whether the system sees correctly, while the latter concerns whether the system understands reasonably.
+In practice, a driving scenario is not merely a collection of objects, but a structured system of relationships — how relevant entities relate to each other, what constraints these relationships impose, and what behaviors they enable or prohibit.
 
-Here, *context* refers to the relational structure of a scene, i.e., how relevant objects relate to each other, what constraints these relationships impose, and what behaviors they enable or prohibit. 
-A system may detect objects with high precision, yet still fail to interpret what those objects mean in context.
+A system may detect objects with high precision, yet still fail to interpret what those objects mean within this structure.
+From a more formal perspective, this implies that **perception accuracy is not a sufficient condition for correct scene understanding.**
 
-In other words: *seeing correctly does not necessarily imply understanding correctly*.
+In simpler terms:
 
-> Perception accuracy is therefore not a sufficient condition for correct contextual understanding.
+> *Seeing correctly does not necessarily imply understanding correctly*.
+
+
+<div style="text-align: center;">
+<img src="blogs/20260316/figure.png" alt="SOTIF" width="700">
+</div>
 
 Crucially, this gap is often invisible in standard evaluation pipelines. Aggregate metrics such as *mean Average Precision (mAP)* or *prediction accuracy* implicitly assume that correctness at the level of individual objects composes into correctness at the system level.
 
@@ -31,10 +35,9 @@ A more precise way to describe this is:
 
 However, this picture is misleading.
 
-Many real-world failures suggest that something more fundamental is missing — not in the fidelity of object detection, but in how situations are interpreted within their context. In fact, context in traffic is rarely reducible to object labels alone. Instead, it fundamentally lies in the relationships between objects.
+Many real-world failures suggest that something more fundamental is missing — not in the fidelity of object detection, but in how situations are interpreted. In practice, a traffic scene is rarely reducible to object labels alone. Instead, it fundamentally lies in the relationships between objects.
 
 Thus, what is hidden here is a class of errors that do not manifest as misclassification or missed detection, but as misinterpretation of these relationships. 
-
 
 To illustrate this point, consider several representative incidents that have appeared in public reports over the past decade.
 The specific vehicles, locations, and timelines are intentionally omitted here — the structural issues are what matter.
@@ -63,17 +66,17 @@ The ADAS detected the fallen pedestrian and executed an emergency steering maneu
 
 At first glance, these incidents appear unrelated. The first two seem to involve *recognition failures*.
 The latter two appear to involve *decision-making problems* despite correct detection. But viewed from a different perspective, they share a common underlying issue: an *inconsistency* in how the scene should be interpreted. Specifically,
-in each case, the system failed to reason about the relationships and context within the scene.
+in each case, the system failed to reason about the relationships and interactions of the objects within the scene.
 
-* In Case 1, a large patch of "sky" appearing beneath a mountain ridge should violate basic physical expectations of the world.
-* In Case 2, the simultaneous presence of a railway barrier, warning signals, and a large moving object should strongly imply a hazardous situation.
-* In Case 3, the detected "pedestrian" was in fact physically attached to the leading vehicle and should have been interpreted as part of a moving platform rather than an independent road user.
-* In Case 4, recognizing a fallen pedestrian is only the first step; deciding whether braking or steering is safer requires reasoning about the surrounding traffic configuration.
+- In Case 1, a large patch of "sky" appearing beneath a mountain ridge should violate basic physical expectations of the world.
+- In Case 2, the simultaneous presence of a railway barrier, warning signals, and a large moving object should strongly imply a hazardous situation.
+- In Case 3, the detected "pedestrian" was in fact physically attached to the leading vehicle and should have been interpreted as part of a moving platform rather than an independent road user.
+- In Case 4, recognizing a fallen pedestrian is only the first step; deciding whether braking or steering is safer requires reasoning about the surrounding traffic configuration.
 
 In all four cases, the failure was not merely about *seeing objects*.
 It was about *understanding the scene as a structured system of relationships.*
 
-Yet in many practical system architectures typically organized around modules like **perception** and **planning**, this kind of **awareness** often has no clearly defined home. Perception focuses on extracting information from sensor data, while planning assumes that the world model it receives is already semantically coherent. The result is thus an uncomfortable situation:
+Yet in many practical system architectures typically organized around modules like **perception** and **planning**, this kind of **scene understanding** often has no clearly defined home. Perception focuses on extracting information from sensor data, while planning assumes that the world model it receives is already semantically coherent. The result is thus an uncomfortable situation:
 many engineers can sense that something important is missing, yet the architecture itself provides no obvious place for it.
 
 The problem becomes what might be called ***the elephant in the room*** — widely sensed, but rarely addressed explicitly.
@@ -96,15 +99,15 @@ This leads to an appealing division of labor:
 
 However, this abstraction hides a critical limitation: 
 perception systems fundamentally operate on *observable structure*.
-They transform sensor data into representations of *what is present* in the current scene, including  *whch objects are there*, *what are they*, and *where they are (up to)*.
+They transform sensor data into representations of *what is present* in the current scene, including  *whch objects are there*, *what are they*, and *where they are*.
 
 Over the past decade, advances in deep learning have significantly improved the reliability of this process.
 Modern systems can detect and track agents with high accuracy, and even predict their short-term trajectories with impressive performance. These capabilities are essential.
 Without them, autonomous driving would not even be feasible.
 
-Yet they are far from sufficient.
+Yet they are not sufficient.
 
-Safe driving depends not only on what is observable, but on how the scene is *organized* and *evolves*. *Priority*, *intent*, *occlusion*, *interaction commitment*, *implicit negotiation*, ..., these are not properties of individual objects, but of *relationships* and *configurations*.
+Safe driving depends not only on what is observable, but on how the scene **is organized** and **evolves**. *Priority*, *intent*, *occlusion*, *interaction commitment*, *implicit negotiation*, ..., these are not properties of individual objects, but of *relationships* and *configurations*.
 
 Such relational properties are not naturally captured by prevailing semantic representations, which are primarily object-centric and attribute-focused.
 They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy.
@@ -122,13 +125,14 @@ Consider a pedestrian near the curb.
 At a given moment, the scene may appear static. Yet the situation is inherently *branched*: the pedestrian may remain on the sidewalk or step into the road — two qualitatively different evolutions of the scene, rather than small variations of the same outcome.
 
 Now consider a vehicle ahead.
-It is not merely an object labeled *car*, but an agent embedded in an interaction:
+It is not merely an object labeled *car*, but an agent embedded in an interaction that can:
 
-* yielding,
-* giving way,
-* negotiating,
-* committing to a maneuver,
-* asserting priority...
+- yield,
+- give way,
+- negotiate,
+- commit to a maneuver,
+- assert priority,
+- ...
 
 These are not just variations in motion, but **structured behavioral modes**, defined by the relationships between agents and the implicit rules governing the environment.
 
@@ -139,10 +143,9 @@ This is exactly where the limitation lies.
 Even trajectory prediction models may achieve strong average performance, yet still fail to capture the **branching structure of behavior** — especially in rare but safety-critical situations.
 
 
-
 ## The Emerging Role of Semantic Reasoning
 
-As discussed in the previous section, context awareness — particularly the ability to *reason over branching interaction structures* — does not naturally reside within perception or trajectory prediction alone.
+As discussed in the previous section, the ability to *reason over branching interaction structures* does not naturally reside within perception or trajectory prediction alone.
 Even with accurate detection and prediction, the relational structure of a scene often remains unresolved.
 
 A natural shift, then, is to introduce an additional layer of processing beyond traditional perception — one that explicitly addresses interpretation, interaction, and ambiguity.
@@ -178,7 +181,7 @@ In this view, semantic reasoning is treated as an extension of perception:
 
 ### Symbolic-Based Methods
 
-Meanwhile, the planning and control communities have approached the problem from a different direction leveraging *symbolic reasoning frameworks*.
+Meanwhile, the planning and control communities have approached the problem from a different direction leveraging *symbolic-based reasoning frameworks*.
 
 Methods such as *risk-aware control*<sup>[5](#references)</sup>, *game-theoretic decision making*<sup>[6](#references)</sup>, and *contingency planning*<sup>[7](#references)</sup> attempt to explicitly reason about uncertainty in the future behaviors of other agents. Rather than assuming a single predicted future, these approaches evaluate actions against multiple possible scenarios and consider their associated risks.
 
@@ -190,8 +193,8 @@ At a high level, these approaches share a common intuition:
 
 However, they differ in where this reasoning is placed within the system.
 
-* In neural-based approaches, semantic structure is expected to *emerge implicitly* from data.
-* In symbolic-based approaches, it is *explicitly represented* through rules, objectives, or interaction models.
+- In neural-based approaches, semantic structure is expected to *emerge implicitly* from data.
+- In symbolic-based approaches, it is *explicitly represented* through rules, objectives, or interaction models.
 
 Each direction comes with its own trade-offs.
 
@@ -200,12 +203,14 @@ On the other hand, symbolic-based approaches, offer greater transparency and con
 
 In practice, many modern systems adopt some form of **hybrid architecture**, combining neural perception and prediction with symbolic-based planning and control.
 
-Yet this hybridization introduces another layer of ambiguity: *Where exactly is the boundary between these components*?
-*Who defines the semantic assumptions that govern their interaction*?
+Yet this hybridization introduces another layer of ambiguity: 
+
+- *Where exactly is the boundary between these components?*
+- *Who defines the semantic assumptions that govern their interaction?*
 
 These are important questions, but they remain, at their core, technical.
 
-A more fundamental assumption underlies all the approaches discussed so far is that *the semantic structure of a scene is well-defined*, or that there exists a coherent “ground truth” of context which the semantic reasoning module, whether neural-based or symbolic-based, can in principle represent and recover.
+A more fundamental assumption underlies all the approaches discussed so far is that *the semantic structure of a scene is well-defined*, or that there exists a coherent “ground truth” of such a structure which the semantic reasoning module — whether neural-based or symbolic-based — can in principle represent and recover.
 
 But this assumption itself deserves scrutiny:
 
@@ -215,15 +220,18 @@ If so, the challenge is no longer just how to perform semantic reasoning, but wh
 
 ## The Nature of Semantic Uncertainty
 
-The discussion so far has implicitly assumed that the semantic structure of a scene, while complex, is ultimately well-defined — that there exists a coherent “ground truth” of context that a sufficiently capable system could, in principle, recover.
+The discussion so far has implicitly assumed that the semantic structure of a scene, while complex, is ultimately well-defined, and a sufficiently capable system could, in principle, recover its “ground truth” — if it exists.
 
 But this assumption does not always hold.
 
-In real-world traffic, the meaning of a scene is often **not uniquely determined**.
-It depends on partial observations, latent intentions, and interactions that have not yet unfolded. One way to think about this is to view a scenario as a carefully composed garden, while a scene is just an immediately visible snapshot of its structured surface — a projection shaped by the current viewpoint.
-Behind each occlusion, around each corner, and along each path lie alternative continuations that are not yet revealed, but remain entirely plausible within the same view. The problem is: no one completely knows every detail of this garden.
+In real-world traffic, the meaning of a scene is often **not uniquely determined**. 
+It depends on partial observations, latent intentions, and interactions that have not yet unfolded.
 
-From this perspective, semantic ambiguity is not only a limitation of sensing or modeling  — how precise can we *describe the garden based on a real photo*, but also an inherent property of the environment itself  — how reasonable can we *understand the garden according to an empirical blueprint*.
+One way to think about this is to view a scenario as a carefully structured garden, while a scene is only a partial, immediately visible snapshot of its surface — a projection shaped by the current viewpoint.
+
+Behind each occlusion, around each corner, and along each path lie alternative continuations that are not yet revealed, yet remain entirely plausible given the same scene. No single observer has access to the full structure of this garden.
+
+From this perspective, semantic ambiguity is not only a limitation of sensing or modeling — how precisely we can *describe the garden from a single observation* — but also an inherent property of the environment itself — how well-defined the garden actually is as an object of understanding.
 
 The challenge is, traditional frameworks of uncertainty are not designed to characterize the latter. 
 
@@ -265,25 +273,24 @@ From this perspective, the core challenge is not simply dealing with noisy measu
 It is dealing with *a combinatorial space of possible interactions among agents*,
 where each branch corresponds to a different semantic interpretation of the scene.
 
-
-## Exposing Semantically Critical Scenarios: A Shift from Data Coverage to Semantic Coverage
+## Exposing Semantically Critical Scenarios: A Shift from Parametric Coverage to Semantic Coverage
 
 The dual challenges discussed above — the limitations of system design and the inherent ambiguity of semantic structure — give rise to a fundamental paradox:
 
 - In principle, safe behavior requires reasoning over a vast space of possible interactions.
 
-- In practice, however, no system can explicitly represent or enumerate them all.
+- In practice, however, no system can explicitly represent them all.
 
 As a result, what ultimately matters is not only how a system reasons,
 but *which possibilities are ever made visible to it in the first place*.
 
-This is where the problem could take a decisive turn.
+This is where the problem takes a decisive turn.
 
-If semantic reasoning cannot be fully resolved at the level of system design alone — at least with current approaches, if at all — then a primary task in its own right may be to *sufficiently expose the relevant semantic configurations during system validation*.
+If semantic reasoning cannot be fully resolved at the level of system design alone — at least with current approaches — then a primary task in its own right is to *systematically expose the relevant semantic configurations during system validation*.
 
-In this sense, the challenge is no longer purely one of modeling or reasoning about the context semantics.
+In this sense, the challenge is no longer purely one of modeling or reasoning about scene semantics.
 It becomes a question of **exposure**:
-which structures are encountered, which interactions are explored, and which scenarios should actually be stress-tested.
+which semantic structures are encountered, which interactions are explored, and which scenarios — as possible evolutions of these structures — are actually stress-tested.
 
 In current industrial practice, this problem is often framed under a familiar umbrella:
 
@@ -293,41 +300,44 @@ Rare events, corner cases, edge scenarios — these terms are widely used to des
 
 However, this framing is fundamentally insufficient. 
 It treats such cases as statistical outliers,
-rather than as manifestations of **missing semantic structure**. 
+rather than as manifestations of **missing semantic structure**.
+
 A rare event is not necessarily just unlikely.
 It may be **systematically absent** from the system’s representation, training process, or evaluation pipeline.
-
 
 This distinction matters.
 
 If a scenario is merely rare, more data may eventually capture it.
 But if a semantic configuration is never explicitly constructed or tested,
-it remains invisible — regardless of how much data is collected.
+it remains invisible — regardless of how much parametric variation or data is collected.
 
-In other words, *long-tail* is not the root cause, but *semantic ommision* is.
+In other words, *long-tail* is not the root cause — *semantic omission* is.
 
 From a testing and validation perspective, this leads to a different objective. 
 The goal is no longer just to accumulate miles or improve average-case performance.
-It is to **actively identify and construct scenarios** that *expose missing semantic relationships*. In this sense, the cases discussed earlier in this article are not just isolated failures.
+It is to *actively identify and construct scenarios* that *expose missing semantic relationships*.
+
+In this sense, the cases discussed earlier in this article are not just isolated failures.
 They are examples of the following latent gaps:
 
-* Relationships that were not properly represented;
-* Interactions that were not adequately considered;
-* Interpretations that were never made explicit.
+- Relationships that were not properly represented;
+- Interactions that were not adequately considered;
+- Interpretations that were never made explicit.
 
-This suggests a shift from **data coverage** to **semantic coverage**.
+This suggests a shift from **parametric coverage** to **semantic coverage**.
 
 Instead of asking:
 
-> Have we seen enough data?
+> Have we sufficiently explored the parametric space?
 
 we should ask:
 
-> Have we exposed the right structures?
+> Have we exposed the right semantic structures?
 
 This perspective is closely aligned with the intent behind **SOTIF (Safety of the Intended Functionality)**,
 which emphasizes the systematic identification and reduction of unknown hazardous scenarios.
-From this viewpoint, semantic coverage can be seen as a more structural lens on the same problem: **not only expanding the space of tested situations, but making explicit the underlying configurations and assumptions that give rise to potential hazards**.
+
+From this viewpoint, semantic coverage can be understood as a more structural lens on the same problem: **not only expanding the space of tested situations, but making explicit the underlying configurations and assumptions that give rise to potential hazards**.
 
 In this view, testing is no longer a downstream verification step.
 It becomes a primary mechanism for *making semantic uncertainty visible*.
@@ -336,8 +346,7 @@ By systematically constructing and exploring *semantic-critical scenarios*,
 testing can reveal not only where the system fails,
 but *which parts of the semantic space it has never truly understood*.
 
-
-## Is It All About Awareness?
+## Semantic Reasoning Beyond Technology
 
 At this point, it is useful to step back from the technical details and reconsider what the discussion is actually pointing to.
 
@@ -365,7 +374,7 @@ these differences remain hidden, but instead compressed into aggregate statistic
 
 From this perspective, identifying the role of semantic reasoning is not a conclusion, but an opening. 
 
-As suggested earlier, the distinction between perception accuracy and context awareness was never a clean separation to begin with.
+As suggested earlier, the distinction between perception accuracy and scene understanding was never a clean separation to begin with.
 It is part of a broader continuum that spans perception, prediction, planning, and ultimately testing and validation.
 
 It reveals that beneath the observable performance of a system lies a deeper layer of structure — one that cannot be attributed to any single module, and instead emerges from the interplay between multiple subsystems and the integration of insights across different disciplines.
