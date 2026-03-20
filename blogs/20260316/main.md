@@ -90,8 +90,7 @@ graph LR
     C -->|Semantic Scene<br>Representation| D[Planner]
 ```
 
-Within this framework, once objects are correctly detected, localized, and classified, the core difficulty of the problem appears to be largely resolved.
-Given the maturity of modern planning and control techniques, the remaining task is typically framed as a well-defined optimization problem: *trajectory generation under known constraints*. 
+Within this framework, once the environment has been accurately represented — at both the object level (detection, localization, classification) and the scene level (semantic segmentation) — the core difficulty of the problem appears to be largely resolved. Given the maturity of modern planning and control techniques, the remaining task is typically framed as a well-defined optimization problem: *trajectory generation under known constraints*. 
 This leads to an appealing division of labor:
 
 > Perception extracts the “facts”, and the planner acts on them.
