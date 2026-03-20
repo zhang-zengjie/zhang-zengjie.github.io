@@ -107,14 +107,13 @@ Yet they are not sufficient.
 
 Safe driving depends not only on what is observable, but on how the scene **is organized** and **evolves**. *Priority*, *intent*, *occlusion*, *interaction commitment*, *implicit negotiation*, ..., these are not properties of individual objects, but of *relationships* and *configurations*.
 
-Such relational properties are not naturally captured by commonly used semantic representations, which are primarily object-centric and attribute-focused.
-They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy.
+Such relational properties are not naturally captured by commonly used semantic representations, which are primarily object-centric and attribute-focused. They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy.
 
 This creates a fundamental mismatch:
 
 > High perception accuracy does not imply correct understanding of the scene.
 
-This limitation becomes more pronounced in multi-agent environments, a simplified reflection of real traffic, where the key question is rarely just *what objects exist*, but **how interactions may unfold over time**.
+This limitation becomes more pronounced in multi-agent environments — a simplified reflection of real traffic — where the key question is rarely just *what objects exist*, but **how interactions may unfold over time**.
 
 Crucially, this is not merely a matter of uncertainty in a probabilistic sense.
 What matters is not just *how likely* a future is, but *how many qualitatively different ways* a situation can evolve — each corresponding to a distinct interaction structure.
