@@ -107,7 +107,7 @@ Yet they are not sufficient.
 
 Safe driving depends not only on what is observable, but on how the scene **is organized** and **evolves**. *Priority*, *intent*, *occlusion*, *interaction commitment*, *implicit negotiation*, ..., these are not properties of individual objects, but of *relationships* and *configurations*.
 
-Such relational properties are not naturally captured by prevailing semantic representations, which are primarily object-centric and attribute-focused.
+Such relational properties are not naturally captured by commonly used semantic representations, which are primarily object-centric and attribute-focused.
 They are therefore only weakly, if at all, reflected in standard perception metrics such as mAP or detection accuracy.
 
 This creates a fundamental mismatch:
@@ -207,7 +207,7 @@ These are important questions, but they remain, at their core, technical.
 
 A more fundamental assumption underlies all the approaches discussed so far is that *the semantic structure of a scene is well-defined*, or that there exists a coherent “ground truth” of such a structure which the semantic reasoning module — whether neural-based or symbolic-based — can in principle represent and recover.
 
-But this assumption itself deserves scrutiny:
+But this assumption itself needs to be carefully considered:
 
 > What if the semantics of a scene are not fully well-defined in the first place?
 
