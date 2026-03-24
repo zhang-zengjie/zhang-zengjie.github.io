@@ -111,9 +111,18 @@ header {
   margin-bottom: 64px;
 }
 
+header p {
+  margin-top: 4px;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #666;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+}
+
 nav a {
   margin-left: 24px;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   color: var(--muted);
 }
 
@@ -387,4 +396,18 @@ article code {
   margin-bottom: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.badge-base.LI-profile-badge {
+  font-size: 1.4rem;
+}
+
+/* 针对链接文字 */
+.badge-base__link {
+  font-size: 1.4rem;
+}
+
+/* 如果以上不生效，可能需要更具体的选择器 */
+.badge-base.LI-profile-badge .badge-base__link {
+  font-size: 1.4rem !important;
 }
